@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
@@ -12,15 +13,16 @@ from .serializers import (UserSerializer, ClientSerializer, RoomSerializer, Rese
 
 @api_view(['POST'])
 def register(request):
-    user = User.objects.create_user(
-        username=request.data['username'],
-        email=request.data['email'],
-        password=request.data['password']
-    )
-    user.save()
-    client = Client.objects.create(user=user, phone_number=request.data.get('phone_number', ''))
-    client.save()
-    return Response("New user registered", status=status.HTTP_201_CREATED)
+    username = request.data['username']
+    email = request.data['email']
+    password = request.data['password']
+    try:
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+        return Response("New user registered", status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def login_view(request):
@@ -29,7 +31,11 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        return Response("User logged in", status=status.HTTP_200_OK)
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }, status=status.HTTP_200_OK)
     return Response("Invalid credentials", status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
