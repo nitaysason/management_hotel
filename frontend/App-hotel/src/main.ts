@@ -10,6 +10,6 @@ import { RouterModule } from '@angular/router';
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(HttpClientModule, FormsModule, RouterModule) // Add RouterModule here
+    importProvidersFrom(HttpClientModule, FormsModule, RouterModule)
   ]
 }).catch(err => console.error(err));

@@ -178,10 +178,15 @@
 </style>
 
 <main class="main">
-  <div>
-    <h1>Welcome to {{ title }}!</h1>
-    <router-outlet></router-outlet>
-  </div>
+  <nav>
+    <ul>
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/register">Register</a></li>
+      <li><a routerLink="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
+  
   <div class="content">
     <div class="left-side">
       <svg
