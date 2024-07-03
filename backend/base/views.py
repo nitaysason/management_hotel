@@ -38,10 +38,13 @@ def login_view(request):
         }, status=status.HTTP_200_OK)
     return Response("Invalid credentials", status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout_view(request):
     logout(request)
     return Response("User logged out", status=status.HTTP_200_OK)
+
 
 class RoomView(APIView):
     permission_classes = [IsAuthenticated]
