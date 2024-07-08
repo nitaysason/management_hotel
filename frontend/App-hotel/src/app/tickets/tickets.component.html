@@ -1,0 +1,22 @@
+<!-- tickets.component.html -->
+
+<h2>Tickets</h2>
+
+<ng-container *ngIf="tickets.length > 0; else ticketsEmpty">
+  <div class="ticket-container">
+    <div *ngFor="let ticket of tickets" class="ticket-card">
+      <div class="ticket-header">
+        <h3>Ticket #{{ ticket.id }}</h3>
+      </div>
+      <div class="ticket-details">
+        <p><strong>Client ID:</strong> {{ ticket.client }}</p>
+        <p><strong>Attraction ID:</strong> {{ ticket.attraction }}</p>
+        <p><strong>Date:</strong> {{ ticket.date }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #ticketsEmpty>
+  <p>No tickets available.</p>
+</ng-template>

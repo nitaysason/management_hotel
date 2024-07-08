@@ -9,7 +9,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app/app-routing.module';
 
 bootstrapApplication(AppComponent, {
@@ -22,8 +21,7 @@ bootstrapApplication(AppComponent, {
       MatToolbarModule,
       MatButtonModule,
       MatFormFieldModule,
-      MatInputModule,
-      CommonModule // Include CommonModule here
+      MatInputModule
     )
   ]
 }).catch(err => console.error(err));

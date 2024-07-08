@@ -1,4 +1,5 @@
-<!-- src/app/app.component.html -->
+<!-- app.component.html -->
+
 <mat-toolbar color="primary">
   <span>Hotel Management</span>
   <span class="spacer"></span>
@@ -6,5 +7,13 @@
   <a mat-button routerLink="/register">Register</a>
   <a mat-button routerLink="/logout">Logout</a>
   <a mat-button routerLink="/orders">Orders</a>
+  <a mat-button routerLink="/rooms">Rooms</a>
+  <a mat-button routerLink="/reservations">Reservations</a> <!-- Example: Add new link for Reservations -->
+  <a mat-button routerLink="/treatments">Treatments</a> <!-- Example: Add new link for Treatments -->
+  <a mat-button routerLink="/tickets">Tickets</a> <!-- Example: Add new link for Tickets -->
+  <a mat-button routerLink="/contact">Contact</a> <!-- Example: Add new link for Contact -->
 </mat-toolbar>
-<router-outlet></router-outlet>
+
+<div class="main-container">
+  <router-outlet></router-outlet>
+</div>

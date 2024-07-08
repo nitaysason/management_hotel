@@ -1,5 +1,3 @@
-// auth.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,7 +12,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  // Helper method to retrieve authorization headers with token
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token');
     return new HttpHeaders({
@@ -23,12 +20,10 @@ export class AuthService {
     });
   }
 
-  // Register user
   register(userData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}register/`, userData);
   }
 
-  // Login user and store token in localStorage
   login(userData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}login/`, userData)
       .pipe(
@@ -38,7 +33,6 @@ export class AuthService {
       );
   }
 
-  // Logout user and remove token from localStorage
   logout(): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}logout/`, {}, { headers })
@@ -49,9 +43,57 @@ export class AuthService {
       );
   }
 
-  // Example method to fetch orders (adjust as per your backend API)
   getOrders(): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.get(`${this.baseUrl}orders/view/`, { headers });
   }
+
+  getRooms(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}rooms/`, { headers });
+  }
+
+
+
+  getRoomDetails(roomId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}rooms/${roomId}/`, { headers });
+  }
+
+  makeReservation(reservationData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${this.baseUrl}reservations/make/`, reservationData, { headers });
+  }
+
+  viewReservations(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}reservations/view/`, { headers });
+  }
+
+  cancelReservation(reservationId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}reservations/cancel/${reservationId}/`, { headers });
+  }
+
+  orderTreatment(treatmentData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${this.baseUrl}orders/treatment/`, treatmentData, { headers });
+  }
+  
+
+  bookTicket(ticketData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${this.baseUrl}tickets/book/`, ticketData, { headers });
+  }
+
+  viewTickets(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}tickets/view/`, { headers });
+  }
+
+  contactHotel(contactData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${this.baseUrl}contact/`, contactData, { headers });
+  }
+  
 }

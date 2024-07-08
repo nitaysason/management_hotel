@@ -1,0 +1,21 @@
+<h2>Rooms</h2>
+
+<ng-container *ngIf="rooms.length > 0; else roomsEmpty">
+  <div class="room-container">
+    <div *ngFor="let room of rooms" class="room-card">
+      <div class="room-header">
+        <h3>Room #{{ room.number }}</h3>
+      </div>
+      <div class="room-details">
+        <p><strong>Room Type:</strong> {{ room.room_type }}</p>
+        <p><strong>Description:</strong> {{ room.description }}</p>
+        <p><strong>Price per Night:</strong> {{ room.price_per_night | currency }}</p>
+        <p><strong>Availability:</strong> {{ room.is_available ? 'Available' : 'Not Available' }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #roomsEmpty>
+  <p>No rooms available.</p>
+</ng-template>

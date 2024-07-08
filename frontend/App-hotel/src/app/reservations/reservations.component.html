@@ -1,0 +1,23 @@
+<!-- reservations.component.html -->
+
+<h2>Reservations</h2>
+
+<ng-container *ngIf="reservations.length > 0; else reservationsEmpty">
+  <div class="reservation-container">
+    <div *ngFor="let reservation of reservations" class="reservation-card">
+      <div class="reservation-header">
+        <h3>Reservation #{{ reservation.id }}</h3>
+      </div>
+      <div class="reservation-details">
+        <p><strong>Room ID:</strong> {{ reservation.room }}</p>
+        <p><strong>Client ID:</strong> {{ reservation.client }}</p>
+        <p><strong>Start Date:</strong> {{ reservation.start_date }}</p>
+        <p><strong>End Date:</strong> {{ reservation.end_date }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #reservationsEmpty>
+  <p>No reservations available.</p>
+</ng-template>

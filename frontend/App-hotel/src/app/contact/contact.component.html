@@ -1,0 +1,20 @@
+<h2>Contact Messages</h2>
+
+<ng-container *ngIf="contactMessages.length > 0; else contactMessagesEmpty">
+  <div class="contact-message-container">
+    <div *ngFor="let message of contactMessages" class="contact-message-card">
+      <div class="contact-message-header">
+        <h3>Message #{{ message.id }}</h3>
+      </div>
+      <div class="contact-message-details">
+        <p><strong>Client ID:</strong> {{ message.client }}</p>
+        <p><strong>Subject:</strong> {{ message.subject }}</p>
+        <p><strong>Message:</strong> {{ message.message }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #contactMessagesEmpty>
+  <p>No contact messages available.</p>
+</ng-template>

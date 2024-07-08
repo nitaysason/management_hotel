@@ -1,0 +1,20 @@
+<h2>Treatments</h2>
+
+<ng-container *ngIf="treatments.length > 0; else treatmentsEmpty">
+  <div class="treatment-container">
+    <div *ngFor="let treatment of treatments" class="treatment-card">
+      <div class="treatment-header">
+        <h3>Treatment #{{ treatment.id }}</h3>
+      </div>
+      <div class="treatment-details">
+        <p><strong>Name:</strong> {{ treatment.name }}</p>
+        <p><strong>Type:</strong> {{ treatment.type }}</p>
+        <p><strong>Price:</strong> {{ treatment.price }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #treatmentsEmpty>
+  <p>No treatments available.</p>
+</ng-template>
