@@ -1,16 +1,36 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { AppRoutingModule } from './app-routing.module';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
+  declarations: [
+    // Declare all your components here
+  ],
   imports: [
     BrowserModule,
-    FormsModule,
+    CommonModule, // Add CommonModule here
     HttpClientModule,
-    RouterModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatCardModule, // Example: Include MatCardModule
+    MatListModule, // Example: Include MatListModule
+    MatInputModule,
+    AppRoutingModule
   ],
   providers: [],
+  bootstrap: [] // Do not bootstrap AppComponent here if you are using standalone components
 })
 export class AppModule { }

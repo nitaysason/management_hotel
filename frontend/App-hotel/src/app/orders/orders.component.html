@@ -1,0 +1,21 @@
+<h2>Orders</h2>
+
+<ng-container *ngIf="orders.length > 0; else ordersEmpty">
+  <div class="order-container">
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-header">
+        <h3>Order #{{ order.id }}</h3>
+      </div>
+      <div class="order-details">
+        <p><strong>Created At:</strong> {{ order.created_at | date: 'medium' }}</p>
+        <p><strong>Client ID:</strong> {{ order.client }}</p>
+        <p><strong>Treatment ID:</strong> {{ order.treatment }}</p>
+        <!-- Add more order details as needed -->
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #ordersEmpty>
+  <p>No orders available.</p>
+</ng-template>

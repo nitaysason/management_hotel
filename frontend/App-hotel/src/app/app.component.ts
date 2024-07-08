@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; // Import CommonModule if necessary
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./app.component.css'],
   standalone: true,
   imports: [
-    CommonModule,
+    CommonModule, // Include CommonModule if used
     MatToolbarModule,
     MatButtonModule,
     RouterModule
