@@ -32,11 +32,14 @@ def login_view(request):
     if user is not None:
         login(request, user)
         refresh = RefreshToken.for_user(user)
+        client = Client.objects.get(user=user)  # Fetch client instance
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
+            'client_id': client.id  # Include client_id in the response
         }, status=status.HTTP_200_OK)
     return Response("Invalid credentials", status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])

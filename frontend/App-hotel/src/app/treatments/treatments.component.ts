@@ -13,11 +13,13 @@ import { FormsModule } from '@angular/forms';
 export class TreatmentsComponent implements OnInit {
   treatments: any[] = [];
   selectedTreatmentId: number | null = null;
+  clientId: number | null = null;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.fetchTreatments();
+    this.fetchClientId();
   }
 
   fetchTreatments() {
@@ -31,9 +33,21 @@ export class TreatmentsComponent implements OnInit {
     );
   }
 
+  fetchClientId() {
+    const clientIdStr = localStorage.getItem('client_id');
+    if (clientIdStr) {
+      this.clientId = Number(clientIdStr);
+      console.log('Client ID:', this.clientId); // Log client ID to verify
+    } else {
+      console.error('Client ID not found in localStorage');
+      alert('Client ID not found. Please log in again.');
+    }
+  }
+
   orderTreatment() {
-    if (this.selectedTreatmentId !== null) {
-      const orderData = { treatment_id: this.selectedTreatmentId };
+    if (this.selectedTreatmentId !== null && this.clientId !== null && !isNaN(this.clientId)) {
+      const orderData = { client: this.clientId, treatment: this.selectedTreatmentId };
+      console.log('Order Data:', orderData); // Log order data to verify
       this.authService.orderTreatment(orderData).subscribe(
         response => {
           console.log('Treatment ordered successfully', response);
@@ -41,11 +55,13 @@ export class TreatmentsComponent implements OnInit {
         },
         error => {
           console.error('Error ordering treatment', error);
-          alert('Error ordering treatment');
+          alert('Error ordering treatment: ' + JSON.stringify(error.error));
         }
       );
     } else {
-      alert('Please select a treatment before ordering');
+      console.error('Invalid client ID or treatment ID');
+      alert('Invalid client ID or treatment ID. Please select a treatment and ensure you are logged in.');
     }
   }
+  
 }

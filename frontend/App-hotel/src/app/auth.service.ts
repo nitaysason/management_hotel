@@ -24,14 +24,15 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}register/`, userData);
   }
 
-  login(userData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}login/`, userData)
-      .pipe(
-        tap((response: any) => {
-          localStorage.setItem('access_token', response.access_token);
-        })
-      );
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}login/`, credentials).pipe(
+      tap((response: any) => {
+        localStorage.setItem('access_token', response.token);
+        localStorage.setItem('client_id', response.client_id); // Ensure client_id is stored
+      })
+    );
   }
+  
 
   logout(): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -80,9 +81,9 @@ export class AuthService {
     return this.http.get(`${this.baseUrl}treatments/`, { headers });
   }
 
-  orderTreatment(treatmentData: any): Observable<any> {
+  orderTreatment(orderData: any): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.post(`${this.baseUrl}orders/treatment/`, treatmentData, { headers });
+    return this.http.post(`${this.baseUrl}orders/treatment/`, orderData, { headers });
   }
 
   bookTicket(ticketData: any): Observable<any> {
