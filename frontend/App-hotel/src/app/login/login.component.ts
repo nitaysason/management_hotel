@@ -1,3 +1,5 @@
+// login.component.ts
+
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -23,19 +25,21 @@ import { MatButtonModule } from '@angular/material/button';
 export class LoginComponent {
   username: string = '';
   password: string = '';
+  loginError: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   login(): void {
     const userData = { username: this.username, password: this.password };
     this.authService.login(userData).subscribe(
-      response => {
-        console.log(response);
-        localStorage.setItem('access_token', response.access);
-        this.router.navigate(['/']);
+      (response: any) => {
+        console.log('Login successful:', response);
+        localStorage.setItem('access_token', response.access); // Assuming token is returned in 'access' property
+        this.router.navigate(['/reservations']); // Redirect to reservations page upon successful login
       },
       error => {
-        console.error(error);
+        console.error('Login error:', error);
+        this.loginError = 'Invalid username or password'; // Display login error message
       }
     );
   }
