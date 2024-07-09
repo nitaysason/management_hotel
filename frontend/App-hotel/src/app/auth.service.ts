@@ -72,6 +72,7 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}reservations/cancel/${reservationId}/`, { headers });
   }
+  
 
   getTreatments(): Observable<any> {
     const headers = this.getAuthHeaders();

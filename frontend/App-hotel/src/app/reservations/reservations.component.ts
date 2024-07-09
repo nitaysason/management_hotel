@@ -34,4 +34,16 @@ export class ReservationsComponent implements OnInit {
       }
     );
   }
+
+  cancelReservation(reservationId: number) {
+    this.authService.cancelReservation(reservationId).subscribe(
+      () => {
+        this.reservations = this.reservations.filter(reservation => reservation.id !== reservationId);
+        console.log('Reservation canceled successfully');
+      },
+      error => {
+        console.error('Error canceling reservation', error);
+      }
+    );
+  }
 }
