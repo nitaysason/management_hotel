@@ -75,11 +75,15 @@ export class AuthService {
     return this.http.delete(`${this.baseUrl}reservations/cancel/${reservationId}/`, { headers });
   }
 
+  getTreatments(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}treatments/`, { headers });
+  }
+
   orderTreatment(treatmentData: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}orders/treatment/`, treatmentData, { headers });
   }
-  
 
   bookTicket(ticketData: any): Observable<any> {
     const headers = this.getAuthHeaders();

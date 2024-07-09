@@ -4,14 +4,20 @@
   <div class="treatment-container">
     <div *ngFor="let treatment of treatments" class="treatment-card">
       <div class="treatment-header">
-        <h3>Treatment #{{ treatment.id }}</h3>
+        <h3>{{ treatment.name }}</h3>
       </div>
       <div class="treatment-details">
-        <p><strong>Name:</strong> {{ treatment.name }}</p>
-        <p><strong>Type:</strong> {{ treatment.type }}</p>
-        <p><strong>Price:</strong> {{ treatment.price }}</p>
+        <p><strong>Description:</strong> {{ treatment.description }}</p>
+        <p><strong>Price:</strong> {{ treatment.price | currency }}</p>
+        <button (click)="selectedTreatmentId = treatment.id">Select</button>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="selectedTreatmentId !== null" class="order-section">
+    <h3>Order Selected Treatment</h3>
+    <p><strong>Selected Treatment ID:</strong> {{ selectedTreatmentId }}</p>
+    <button (click)="orderTreatment()">Order Treatment</button>
   </div>
 </ng-container>
 

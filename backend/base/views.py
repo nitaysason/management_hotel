@@ -112,6 +112,13 @@ def cancel_reservation(request, reservation_id):
         return Response("Reservation canceled", status=status.HTTP_204_NO_CONTENT)
     except Reservation.DoesNotExist:
         return Response("Reservation not found", status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_treatments(request):
+    treatments = Treatment.objects.all()
+    serializer = TreatmentSerializer(treatments, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

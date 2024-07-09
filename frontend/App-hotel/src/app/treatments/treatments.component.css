@@ -1,0 +1,30 @@
+.treatment-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.treatment-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 5px;
+  width: calc(33% - 1rem);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.treatment-header {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.treatment-details {
+  margin-bottom: 1rem;
+}
+
+.order-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
