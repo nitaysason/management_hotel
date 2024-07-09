@@ -32,16 +32,15 @@ export class AuthService {
       })
     );
   }
-  
 
   logout(): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.post(`${this.baseUrl}logout/`, {}, { headers })
-      .pipe(
-        tap(() => {
-          localStorage.removeItem('access_token');
-        })
-      );
+    return this.http.post(`${this.baseUrl}logout/`, {}, { headers }).pipe(
+      tap(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('client_id');
+      })
+    );
   }
 
   getOrders(): Observable<any> {
@@ -53,8 +52,6 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.get(`${this.baseUrl}rooms/`, { headers });
   }
-
-
 
   getRoomDetails(roomId: number): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -100,13 +97,9 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}contact/`, contactData, { headers });
   }
-  
- // auth.service.ts
-getContactMessages(): Observable<any> {
-  const headers = this.getAuthHeaders();
-  return this.http.get(`${this.baseUrl}contact/messages/`, { headers });
-}
 
-  
-  
+  getContactMessages(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}contact/messages/`, { headers });
+  }
 }

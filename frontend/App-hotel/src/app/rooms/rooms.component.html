@@ -1,3 +1,5 @@
+<!-- rooms.component.html -->
+
 <h2>Rooms</h2>
 
 <ng-container *ngIf="rooms.length > 0; else roomsEmpty">
@@ -11,6 +13,20 @@
         <p><strong>Description:</strong> {{ room.description }}</p>
         <p><strong>Price per Night:</strong> {{ room.price_per_night | currency }}</p>
         <p><strong>Availability:</strong> {{ room.is_available ? 'Available' : 'Not Available' }}</p>
+
+        <!-- Reservation Form -->
+        <div *ngIf="room.is_available" class="reservation-form">
+          <h4>Make a Reservation</h4>
+          <form (ngSubmit)="makeReservation(room.id)">
+            <mat-form-field>
+              <input matInput type="date" placeholder="Check-in Date" [(ngModel)]="reservationData.get(room.id).check_in_date" name="check_in_date_{{room.id}}" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput type="date" placeholder="Check-out Date" [(ngModel)]="reservationData.get(room.id).check_out_date" name="check_out_date_{{room.id}}" required>
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary">Reserve</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
