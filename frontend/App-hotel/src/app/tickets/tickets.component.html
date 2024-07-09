@@ -1,6 +1,18 @@
 <!-- tickets.component.html -->
 
-<h2>Tickets</h2>
+<h2 class="page-title">Tickets</h2>
+
+<!-- Ticket Booking Form -->
+<div class="ticket-booking-form">
+  <h3 class="form-title">Book a Ticket</h3>
+  <form (ngSubmit)="bookTicket()">
+    <mat-form-field appearance="outline">
+      <mat-label>Attraction ID</mat-label>
+      <input matInput [(ngModel)]="ticketData.attraction" name="attraction" required>
+    </mat-form-field>
+    <button mat-raised-button type="submit" color="primary">Book Ticket</button>
+  </form>
+</div>
 
 <ng-container *ngIf="tickets.length > 0; else ticketsEmpty">
   <div class="ticket-container">
