@@ -1,13 +1,13 @@
+// logout.component.ts
+
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-logout',
-  template: '<button (click)="logout()">Logout</button>',
-  standalone: true,
-  imports: [CommonModule]
+  templateUrl: './logout.component.html',
+  styleUrls: ['./logout.component.css']
 })
 export class LogoutComponent {
 
