@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_treatments, register, login_view, logout_view, RoomView, make_reservation, view_reservations, cancel_reservation, order_treatment, view_orders, book_ticket, view_tickets, contact_hotel
+from .views import get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, make_reservation, view_reservations, cancel_reservation, order_treatment, view_orders, book_ticket, view_tickets, contact_hotel
 
 urlpatterns = [
     path('register/', register, name='register'),
@@ -15,5 +15,7 @@ urlpatterns = [
     path('tickets/book/', book_ticket, name='book_ticket'),
     path('tickets/view/', view_tickets, name='view_tickets'),
     path('contact/', contact_hotel, name='contact_hotel'),
+    path('contact/messages/', get_contact_messages, name='get_contact_messages'),
     path('treatments/', get_treatments, name='get_treatments'),
+    
 ]

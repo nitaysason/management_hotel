@@ -101,4 +101,12 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}contact/`, contactData, { headers });
   }
   
+ // auth.service.ts
+getContactMessages(): Observable<any> {
+  const headers = this.getAuthHeaders();
+  return this.http.get(`${this.baseUrl}contact/messages/`, { headers });
+}
+
+  
+  
 }

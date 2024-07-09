@@ -154,6 +154,12 @@ def view_tickets(request):
     tickets = Ticket.objects.filter(client=request.user.client)
     serializer = TicketSerializer(tickets, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_contact_messages(request):
+    contact_messages = ContactMessage.objects.all()
+    serializer = ContactMessageSerializer(contact_messages, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
