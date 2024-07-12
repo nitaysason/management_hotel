@@ -23,7 +23,6 @@ def register(request):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['POST'])
 def login_view(request):
     username = request.data.get('username')
@@ -32,22 +31,27 @@ def login_view(request):
     if user is not None:
         login(request, user)
         refresh = RefreshToken.for_user(user)
-        client = Client.objects.get(user=user)  # Fetch client instance
-        return Response({
+        response_data = {
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            'client_id': client.id  # Include client_id in the response
-        }, status=status.HTTP_200_OK)
+        }
+
+        # Check if the user is a client
+        if Client.objects.filter(user=user).exists():
+            client = Client.objects.get(user=user)
+            response_data['client_id'] = client.id
+        # Add staff information if the user is a staff member
+        elif user.is_staff:
+            response_data['staff_id'] = user.id  # or any other relevant staff information
+
+        return Response(response_data, status=status.HTTP_200_OK)
     return Response("Invalid credentials", status=status.HTTP_400_BAD_REQUEST)
-
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
     logout(request)
     return Response("User logged out", status=status.HTTP_200_OK)
-
 
 class RoomView(APIView):
     permission_classes = [IsAuthenticated]
@@ -169,3 +173,103 @@ def contact_hotel(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Staff-specific views
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_clients(request):
+    if not request.user.is_staff:
+        return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
+    clients = Client.objects.all()
+    serializer = ClientSerializer(clients, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def manage_orders(request, order_id=None):
+    if not request.user.is_staff:
+        return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'POST':
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            return Response("Order not found", status=status.HTTP_404_NOT_FOUND)
+        serializer = OrderSerializer(order, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            return Response("Order not found", status=status.HTTP_404_NOT_FOUND)
+        order.delete()
+        return Response("Order deleted", status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def manage_tickets(request, ticket_id=None):
+    if not request.user.is_staff:
+        return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'POST':
+        serializer = TicketSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
+        try:
+            ticket = Ticket.objects.get(id=ticket_id)
+        except Ticket.DoesNotExist:
+            return Response("Ticket not found", status=status.HTTP_404_NOT_FOUND)
+        serializer = TicketSerializer(ticket, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        try:
+            ticket = Ticket.objects.get(id=ticket_id)
+        except Ticket.DoesNotExist:
+            return Response("Ticket not found", status=status.HTTP_404_NOT_FOUND)
+        ticket.delete()
+        return Response("Ticket deleted", status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def manage_treatments(request, treatment_id=None):
+    if not request.user.is_staff:
+        return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'POST':
+        serializer = TreatmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
+        try:
+            treatment = Treatment.objects.get(id=treatment_id)
+        except Treatment.DoesNotExist:
+            return Response("Treatment not found", status=status.HTTP_404_NOT_FOUND)
+        serializer = TreatmentSerializer(treatment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        try:
+            treatment = Treatment.objects.get(id=treatment_id)
+        except Treatment.DoesNotExist:
+            return Response("Treatment not found", status=status.HTTP_404_NOT_FOUND)
+        treatment.delete()
+        return Response("Treatment deleted", status=status.HTTP_204_NO_CONTENT)

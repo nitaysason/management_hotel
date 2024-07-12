@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, make_reservation, view_reservations, cancel_reservation, order_treatment, view_orders, book_ticket, view_tickets, contact_hotel
+from .views import (get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
+                    make_reservation, view_reservations, cancel_reservation, order_treatment, view_orders, 
+                    book_ticket, view_tickets, contact_hotel, view_clients, manage_orders, manage_tickets, manage_treatments)
 
 urlpatterns = [
     path('register/', register, name='register'),
@@ -17,5 +19,11 @@ urlpatterns = [
     path('contact/', contact_hotel, name='contact_hotel'),
     path('contact/messages/', get_contact_messages, name='get_contact_messages'),
     path('treatments/', get_treatments, name='get_treatments'),
-    
+    path('clients/', view_clients, name='view_clients'),
+    path('orders/manage/', manage_orders, name='manage_orders'),  # For POST
+    path('orders/manage/<int:order_id>/', manage_orders, name='manage_order'),  # For PUT and DELETE
+    path('tickets/manage/', manage_tickets, name='manage_tickets'),  # For POST
+    path('tickets/manage/<int:ticket_id>/', manage_tickets, name='manage_ticket'),  # For PUT and DELETE
+    path('treatments/manage/', manage_treatments, name='manage_treatments'),  # For POST
+    path('treatments/manage/<int:treatment_id>/', manage_treatments, name='manage_treatment'),  # For PUT and DELETE
 ]
