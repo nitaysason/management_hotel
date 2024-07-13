@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
+import { ClientsComponent } from './clients/clients.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MatListModule } from '@angular/material/list';
     MatCardModule, // Example: Include MatCardModule
     MatListModule, // Example: Include MatListModule
     MatInputModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ClientsComponent
   ],
   providers: [],
   bootstrap: [] // Do not bootstrap AppComponent here if you are using standalone components

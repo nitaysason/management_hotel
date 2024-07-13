@@ -9,6 +9,10 @@ import { ReservationsComponent } from './reservations/reservations.component';
 import { TreatmentsComponent } from './treatments/treatments.component';
 import { TicketsComponent } from './tickets/tickets.component';
 import { ContactComponent } from './contact/contact.component';
+import { ClientsComponent } from './clients/clients.component';
+import { ManageOrdersComponent } from './manage-orders/manage-orders.component';
+import { ManageTicketsComponent } from './manage-tickets/manage-tickets.component';
+import { ManageTreatmentsComponent } from './manage-treatments/manage-treatments.component';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -20,6 +24,10 @@ const routes: Routes = [
   { path: 'treatments', component: TreatmentsComponent },
   { path: 'tickets', component: TicketsComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'clients', component: ClientsComponent },
+  { path: 'manage-orders', component: ManageOrdersComponent },
+  { path: 'manage-tickets', component: ManageTicketsComponent },
+  { path: 'manage-treatments', component: ManageTreatmentsComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 

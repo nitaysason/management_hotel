@@ -1,0 +1,20 @@
+<!-- clients.component.html -->
+
+<h2>Clients</h2>
+
+<ng-container *ngIf="clients.length > 0; else clientsEmpty">
+  <div class="client-container">
+    <div *ngFor="let client of clients" class="client-card">
+      <div class="client-details">
+        <p><strong>User ID:</strong> {{ client.user.id }}</p>
+        <p><strong>Username:</strong> {{ client.user.username }}</p>
+        <p><strong>Email:</strong> {{ client.user.email }}</p>
+        <p><strong>Phone Number:</strong> {{ client.phone_number }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #clientsEmpty>
+  <p>No clients available.</p>
+</ng-template>

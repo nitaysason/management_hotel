@@ -1,3 +1,4 @@
+// src/app/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -27,8 +28,9 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}login/`, credentials).pipe(
       tap((response: any) => {
-        localStorage.setItem('access_token', response.token);
-        localStorage.setItem('client_id', response.client_id); // Ensure client_id is stored
+        localStorage.setItem('access_token', response.access);
+        localStorage.setItem('client_id', response.client_id || '');
+        localStorage.setItem('staff_id', response.staff_id || '');
       })
     );
   }
@@ -39,6 +41,7 @@ export class AuthService {
       tap(() => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('client_id');
+        localStorage.removeItem('staff_id');
       })
     );
   }
@@ -72,7 +75,6 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}reservations/cancel/${reservationId}/`, { headers });
   }
-  
 
   getTreatments(): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -103,4 +105,50 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.get(`${this.baseUrl}contact/messages/`, { headers });
   }
+
+  // Staff operations
+  getClients(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.baseUrl}clients/`, { headers });
+  }
+
+  manageOrders(orderData: any, orderId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (orderId) {
+      return this.http.put(`${this.baseUrl}orders/manage/${orderId}/`, orderData, { headers });
+    }
+    return this.http.post(`${this.baseUrl}orders/manage/`, orderData, { headers });
+  }
+
+  deleteOrder(orderId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}orders/manage/${orderId}/`, { headers });
+  }
+
+  manageTickets(ticketData: any, ticketId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (ticketId) {
+      return this.http.put(`${this.baseUrl}tickets/manage/${ticketId}/`, ticketData, { headers });
+    }
+    return this.http.post(`${this.baseUrl}tickets/manage/`, ticketData, { headers });
+  }
+
+  deleteTicket(ticketId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}tickets/manage/${ticketId}/`, { headers });
+  }
+
+  manageTreatments(treatmentData: any, treatmentId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (treatmentId) {
+      return this.http.put(`${this.baseUrl}treatments/manage/${treatmentId}/`, treatmentData, { headers });
+    }
+    return this.http.post(`${this.baseUrl}treatments/manage/`, treatmentData, { headers });
+  }
+
+  deleteTreatment(treatmentId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}treatments/manage/${treatmentId}/`, { headers });
+  }
 }
+
