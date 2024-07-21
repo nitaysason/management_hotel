@@ -151,4 +151,3 @@ export class AuthService {
     return this.http.delete(`${this.baseUrl}treatments/manage/${treatmentId}/`, { headers });
   }
 }
-

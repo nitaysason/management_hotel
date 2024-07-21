@@ -184,7 +184,7 @@ def view_clients(request):
     serializer = ClientSerializer(clients, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['POST', 'PUT', 'DELETE'])
+@api_view(['POST', 'PUT', 'DELETE', 'GET'])
 @permission_classes([IsAuthenticated])
 def manage_orders(request, order_id=None):
     if not request.user.is_staff:
@@ -196,6 +196,7 @@ def manage_orders(request, order_id=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     elif request.method == 'PUT':
         try:
             order = Order.objects.get(id=order_id)
@@ -206,6 +207,7 @@ def manage_orders(request, order_id=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     elif request.method == 'DELETE':
         try:
             order = Order.objects.get(id=order_id)
@@ -213,6 +215,19 @@ def manage_orders(request, order_id=None):
             return Response("Order not found", status=status.HTTP_404_NOT_FOUND)
         order.delete()
         return Response("Order deleted", status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'GET':
+        if order_id:
+            try:
+                order = Order.objects.get(id=order_id)
+            except Order.DoesNotExist:
+                return Response("Order not found", status=status.HTTP_404_NOT_FOUND)
+            serializer = OrderSerializer(order)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            orders = Order.objects.all()
+            serializer = OrderSerializer(orders, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
