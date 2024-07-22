@@ -64,7 +64,8 @@ export class ManageOrdersComponent implements OnInit {
     );
   }
 
-  updateOrder(orderId: number, updatedData: any) {
+  updateOrder(orderId: number, client: any, treatment: any) {
+    const updatedData = { client, treatment };
     this.authService.manageOrders(updatedData, orderId).subscribe(
       (updatedOrder: any) => {
         this.orders = this.orders.map(order =>
@@ -79,4 +80,5 @@ export class ManageOrdersComponent implements OnInit {
       }
     );
   }
+  
 }
