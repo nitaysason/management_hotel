@@ -10,6 +10,7 @@ from .models import Client, Room, Reservation, Treatment, Order, Attraction, Tic
 from .serializers import (UserSerializer, ClientSerializer, RoomSerializer, ReservationSerializer,
                           TreatmentSerializer, OrderSerializer, AttractionSerializer, TicketSerializer,
                           ContactMessageSerializer)
+from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['POST'])
 def register(request):
@@ -106,7 +107,12 @@ def make_reservation(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_reservations(request):
-    reservations = Reservation.objects.filter(client=request.user.client)
+    if request.user.is_staff:
+        # Staff members can view all reservations
+        reservations = Reservation.objects.all()
+    else:
+        # Clients can only view their own reservations
+        reservations = Reservation.objects.filter(client=request.user.client)
     serializer = ReservationSerializer(reservations, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -114,11 +120,33 @@ def view_reservations(request):
 @permission_classes([IsAuthenticated])
 def cancel_reservation(request, reservation_id):
     try:
-        reservation = Reservation.objects.get(id=reservation_id, client=request.user.client)
+        reservation = Reservation.objects.get(id=reservation_id)
         reservation.delete()
-        return Response("Reservation canceled", status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except ObjectDoesNotExist:
+        return Response({"error": "Reservation not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"Error canceling reservation: {e}")
+        return Response({"error": "An error occurred while canceling the reservation"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_reservation(request, reservation_id):
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+        if not request.user.is_staff and reservation.client != request.user.client:
+            return Response({"error": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
+        serializer = ReservationSerializer(reservation, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Reservation.DoesNotExist:
-        return Response("Reservation not found", status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Reservation not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"Error updating reservation: {e}")
+        return Response({"error": "An error occurred while updating the reservation"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_treatments(request):

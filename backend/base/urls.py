@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
-                    make_reservation, view_reservations, cancel_reservation, order_treatment, view_orders, 
+                    make_reservation, view_reservations, cancel_reservation,update_reservation, order_treatment, view_orders, 
                     book_ticket, view_tickets, contact_hotel, view_clients, manage_orders, manage_tickets, manage_treatments)
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('reservations/make/', make_reservation, name='make_reservation'),
     path('reservations/view/', view_reservations, name='view_reservations'),
     path('reservations/cancel/<int:reservation_id>/', cancel_reservation, name='cancel_reservation'),
+    path('reservations/update/<int:reservation_id>/', update_reservation, name='update_reservation'),
     path('orders/treatment/', order_treatment, name='order_treatment'),
     path('orders/view/', view_orders, name='view_orders'),
     path('tickets/book/', book_ticket, name='book_ticket'),

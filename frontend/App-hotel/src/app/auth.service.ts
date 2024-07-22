@@ -10,6 +10,7 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
 
   private baseUrl = 'http://127.0.0.1:8000/';
+  apiUrl: any;
 
   constructor(private http: HttpClient) { }
 
@@ -75,6 +76,15 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}reservations/cancel/${reservationId}/`, { headers });
   }
+
+// auth.service.ts
+  updateReservation(id: number, data: any): Observable<any> {
+    const url = `${this.baseUrl}reservations/update/${id}/`; // Correct URL construction
+    const headers = this.getAuthHeaders();
+    return this.http.put(url, data, { headers });
+  }
+
+
 
   getTreatments(): Observable<any> {
     const headers = this.getAuthHeaders();
