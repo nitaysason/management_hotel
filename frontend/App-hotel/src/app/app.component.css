@@ -1,19 +1,38 @@
+/* app.component.css */
+.title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
 .spacer {
-    flex: 1 1 auto;
-  }
-  
-  mat-toolbar {
-    background: #3f51b5;
-    color: white;
-  }
-  
-  mat-toolbar a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-  
-  mat-toolbar a:hover {
-    text-decoration: underline;
-  }
-  
+  flex: 1;
+}
+
+mat-toolbar {
+  background: #3f51b5;
+  color: white;
+  padding: 0 16px;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line */
+  align-items: center;
+}
+
+mat-toolbar a {
+  color: white;
+  text-decoration: none;
+  margin: 0 8px;
+  font-size: 14px;
+  white-space: nowrap; /* Prevents text wrapping in links */
+}
+
+mat-toolbar a:hover {
+  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1); /* Slight highlight on hover */
+}
+
+.main-container {
+  padding: 16px;
+}
