@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ContactComponent implements OnInit {
   contactMessages: any[] = [];
-  contactData = { subject: '', message: '' };  // Initialize with empty strings
+  contactData = { subject: '', message: '' };
 
   constructor(private authService: AuthService) {}
 
@@ -35,7 +35,6 @@ export class ContactComponent implements OnInit {
     const client_id = localStorage.getItem('client_id');
     if (client_id) {
       const contactData = {
-        client: Number(client_id),  // Ensure client_id is a number
         subject: this.contactData.subject,
         message: this.contactData.message
       };

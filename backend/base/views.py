@@ -161,18 +161,28 @@ def view_tickets(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_contact_messages(request):
-    contact_messages = ContactMessage.objects.all()
+    if request.user.is_staff:
+        # Staff user - return all contact messages
+        contact_messages = ContactMessage.objects.all()
+    else:
+        # Regular user - return only messages from this user
+        contact_messages = ContactMessage.objects.filter(client=request.user.id)
+
     serializer = ContactMessageSerializer(contact_messages, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def contact_hotel(request):
-    serializer = ContactMessageSerializer(data=request.data)
+    contact_data = request.data
+    contact_data['client'] = request.user.id  # Ensure the message is associated with the logged-in user
+    serializer = ContactMessageSerializer(data=contact_data)
+    
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Staff-specific views
 @api_view(['GET'])
