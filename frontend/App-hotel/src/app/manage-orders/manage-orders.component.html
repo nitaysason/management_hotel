@@ -1,16 +1,17 @@
 <!-- manage-orders.component.html -->
+<h2 class="title">Orders</h2>
 
-<h2>Orders</h2>
-
-<div>
+<div class="new-order">
   <h3>Create New Order</h3>
-  <div>
+  <div class="form-group">
     <label for="new-client">Client ID:</label>
     <input id="new-client" #newClient>
+  </div>
+  <div class="form-group">
     <label for="new-treatment">Treatment ID:</label>
     <input id="new-treatment" #newTreatment>
-    <button (click)="createOrder({ client: newClient.value, treatment: newTreatment.value })">Create Order</button>
   </div>
+  <button class="btn create-btn" (click)="createOrder({ client: newClient.value, treatment: newTreatment.value })">Create Order</button>
 </div>
 
 <ng-container *ngIf="orders.length > 0; else ordersEmpty">
@@ -24,15 +25,16 @@
         <p><strong>Treatment ID:</strong> {{ order.treatment }}</p>
         <p><strong>Date:</strong> {{ order.date }}</p>
       </div>
-      <button (click)="deleteOrder(order.id)" class="warn-button">Delete Order</button>
-      <div>
+      <button (click)="deleteOrder(order.id)" class="btn warn-btn">Delete Order</button>
+      <div class="form-group">
         <label for="client-{{ order.id }}">Client ID:</label>
         <input id="client-{{ order.id }}" #clientInput value="{{ order.client }}">
+      </div>
+      <div class="form-group">
         <label for="treatment-{{ order.id }}">Treatment ID:</label>
         <input id="treatment-{{ order.id }}" #treatmentInput value="{{ order.treatment }}">
-        <button (click)="updateOrder(order.id, clientInput.value, treatmentInput.value)">Update Order</button>
-
       </div>
+      <button class="btn update-btn" (click)="updateOrder(order.id, clientInput.value, treatmentInput.value)">Update Order</button>
     </div>
   </div>
 </ng-container>

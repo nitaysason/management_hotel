@@ -1,26 +1,152 @@
+/* Container for reservations */
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Flex container for reservation cards */
 .reservation-container {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
 }
 
+/* Individual reservation card */
 .reservation-card {
+  flex: 1 1 calc(33.333% - 20px);
+  box-sizing: border-box;
   border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
+/* Hover effect for reservation cards */
+.reservation-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+/* Header within reservation card */
 .reservation-header {
-  margin-bottom: 1rem;
+  border-bottom: 2px solid #3f51b5;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
+/* Details section within reservation card */
 .reservation-details {
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
 
+/* Button group within reservation card */
 .button-group {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 10px;
+}
+
+/* Primary button styles */
+button.mat-primary {
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+/* Hover effect for primary buttons */
+button.mat-primary:hover {
+  background-color: #303f9f;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+/* Warning button styles */
+button.mat-warn {
+  background-color: #f44336;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+/* Hover effect for warning buttons */
+button.mat-warn:hover {
+  background-color: #d32f2f;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Form group styling */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input, textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Button styles for the form */
+button[type="submit"] {
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover effect for submit buttons */
+button[type="submit"]:hover {
+  background-color: #303f9f;
+  transform: scale(1.05);
+}
+
+/* Specific styles for edit and cancel buttons within reservation card */
+.edit-button,
+.cancel-button {
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover effect for edit and cancel buttons */
+.edit-button:hover,
+.cancel-button:hover {
+  background-color: #303f9f;
+  transform: scale(1.05);
 }

@@ -1,4 +1,5 @@
-<h2>Contact Messages</h2>
+<!-- contact.component.html -->
+<h2 class="title">Contact Messages</h2>
 
 <ng-container *ngIf="contactMessages.length > 0; else contactMessagesEmpty">
   <div class="contact-message-container">
@@ -20,7 +21,7 @@
 </ng-template>
 
 <!-- Form to send a new contact message -->
-<h2>Send a Contact Message</h2>
+<h2 class="title">Send a Contact Message</h2>
 <form #contactForm="ngForm" (ngSubmit)="sendContactMessage()" class="contact-form">
   <div class="form-group">
     <label for="subject">Subject</label>
@@ -30,5 +31,5 @@
     <label for="message">Message</label>
     <textarea id="message" name="message" [(ngModel)]="contactData.message" required></textarea>
   </div>
-  <button type="submit">Send Message</button>
+  <button type="submit" class="btn submit-btn">Send Message</button>
 </form>

@@ -1,14 +1,17 @@
-<h2>Tickets</h2>
+<!-- manage-tickets.component.html -->
+<h2 class="title">Tickets</h2>
 
-<div>
+<div class="new-ticket">
   <h3>Create New Ticket</h3>
-  <div>
+  <div class="form-group">
     <label for="new-client">Client ID:</label>
     <input id="new-client" #newClient>
+  </div>
+  <div class="form-group">
     <label for="new-attraction">Attraction ID:</label>
     <input id="new-attraction" #newAttraction>
-    <button (click)="createTicket({ client: newClient.value, attraction: newAttraction.value })">Create Ticket</button>
   </div>
+  <button class="btn create-btn" (click)="createTicket({ client: newClient.value, attraction: newAttraction.value })">Create Ticket</button>
 </div>
 
 <ng-container *ngIf="tickets.length > 0; else ticketsEmpty">
@@ -22,14 +25,16 @@
         <p><strong>Client ID:</strong> {{ ticket.client }}</p>
         <p><strong>Attraction ID:</strong> {{ ticket.attraction }}</p>
       </div>
-      <button (click)="deleteTicket(ticket.id)" class="warn-button">Delete Ticket</button>
-      <div>
+      <button (click)="deleteTicket(ticket.id)" class="btn warn-btn">Delete Ticket</button>
+      <div class="form-group">
         <label for="client-{{ ticket.id }}">Client ID:</label>
         <input id="client-{{ ticket.id }}" #clientInput value="{{ ticket.client }}">
+      </div>
+      <div class="form-group">
         <label for="attraction-{{ ticket.id }}">Attraction ID:</label>
         <input id="attraction-{{ ticket.id }}" #attractionInput value="{{ ticket.attraction }}">
-        <button (click)="updateTicket(ticket.id, { client: clientInput.value, attraction: attractionInput.value })">Update Ticket</button>
       </div>
+      <button class="btn update-btn" (click)="updateTicket(ticket.id, { client: clientInput.value, attraction: attractionInput.value })">Update Ticket</button>
     </div>
   </div>
 </ng-container>

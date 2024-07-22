@@ -1,4 +1,5 @@
-<h2>Reservations</h2>
+<!-- reservations.component.html -->
+<h2 class="title">Reservations</h2>
 
 <ng-container *ngIf="reservations.length > 0; else reservationsEmpty">
   <div class="reservation-container">
@@ -13,33 +14,34 @@
         <p><strong>End Date:</strong> {{ reservation.end_date }}</p>
         <ng-container *ngIf="isStaff">
           <div class="button-group">
-            <button mat-button (click)="editReservation(reservation)" color="primary">Edit Reservation</button>
-            <button mat-button (click)="cancelReservation(reservation.id)" color="warn">Cancel Reservation</button>
+            <button (click)="editReservation(reservation)" class="edit-button">Edit Reservation</button>
+            <button (click)="cancelReservation(reservation.id)" class="cancel-button">Cancel Reservation</button>
           </div>
         </ng-container>
       </div>
       <div *ngIf="editingReservationId === reservation.id">
-        <form [formGroup]="editForm" (ngSubmit)="updateReservation()">
-          <div>
+        <form [formGroup]="editForm" (ngSubmit)="updateReservation()" class="edit-form">
+          <div class="form-group">
             <label for="room">Room ID:</label>
             <input id="room" formControlName="room">
           </div>
-          <div>
+          <div class="form-group">
             <label for="client">Client ID:</label>
             <input id="client" formControlName="client">
           </div>
-          <div>
+          <div class="form-group">
             <label for="start_date">Start Date:</label>
             <input id="start_date" formControlName="start_date" type="date">
           </div>
-          <div>
+          <div class="form-group">
             <label for="end_date">End Date:</label>
             <input id="end_date" formControlName="end_date" type="date">
           </div>
-          <button type="submit" mat-button color="primary">Save</button>
-          <button type="button" mat-button (click)="cancelEdit()" color="warn">Cancel</button>
+          <div class="button-group">
+            <button type="submit" mat-raised-button color="primary">Save</button>
+            <button type="button" mat-raised-button (click)="cancelEdit()" color="warn">Cancel</button>
+          </div>
         </form>
-        
       </div>
     </div>
   </div>

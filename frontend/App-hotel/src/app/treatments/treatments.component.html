@@ -1,4 +1,5 @@
-<h2>Treatments</h2>
+<!-- treatments.component.html -->
+<h2 class="title">Treatments</h2>
 
 <ng-container *ngIf="treatments.length > 0; else treatmentsEmpty">
   <div class="treatment-container">
@@ -9,7 +10,9 @@
       <div class="treatment-details">
         <p><strong>Description:</strong> {{ treatment.description }}</p>
         <p><strong>Price:</strong> {{ treatment.price | currency }}</p>
-        <button (click)="selectedTreatmentId = treatment.id">Select</button>
+        <button mat-raised-button (click)="selectedTreatmentId = treatment.id" color="primary" class="select-button">
+          Select
+        </button>
       </div>
     </div>
   </div>
@@ -17,7 +20,9 @@
   <div *ngIf="selectedTreatmentId !== null" class="order-section">
     <h3>Order Selected Treatment</h3>
     <p><strong>Selected Treatment ID:</strong> {{ selectedTreatmentId }}</p>
-    <button (click)="orderTreatment()">Order Treatment</button>
+    <button mat-raised-button (click)="orderTreatment()" color="accent">
+      Order Treatment
+    </button>
   </div>
 </ng-container>
 

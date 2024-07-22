@@ -1,30 +1,60 @@
+/* treatments.component.css */
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
 .treatment-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 20px;
 }
 
 .treatment-card {
+  flex: 1 1 calc(33.333% - 20px);
+  box-sizing: border-box;
   border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 5px;
-  width: calc(33% - 1rem);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.treatment-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .treatment-header {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
 
-.treatment-details {
-  margin-bottom: 1rem;
+.treatment-details p {
+  margin: 5px 0;
+}
+
+.select-button {
+  margin-top: 10px;
+  width: 100%;
+  font-weight: bold;
+  background-color: #3f51b5; /* Primary color */
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.select-button:hover {
+  background-color: #303f9f; /* Darker primary color */
 }
 
 .order-section {
-  margin-top: 2rem;
-  padding: 1rem;
+  margin-top: 20px;
+  padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+button[mat-button] {
+  margin-top: 10px;
 }
