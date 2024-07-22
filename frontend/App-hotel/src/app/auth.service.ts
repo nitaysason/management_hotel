@@ -156,13 +156,38 @@ export class AuthService {
     return this.http.delete(`${this.baseUrl}tickets/manage/${ticketId}/`, { headers });
   }
 
-  manageTreatments(treatmentData: any, treatmentId?: number): Observable<any> {
+  manageTreatments(treatmentData?: any, treatmentId?: number): Observable<any> {
     const headers = this.getAuthHeaders();
+    
     if (treatmentId) {
-      return this.http.put(`${this.baseUrl}treatments/manage/${treatmentId}/`, treatmentData, { headers });
+      // If treatmentId is provided, check the request method
+      if (treatmentData) {
+        // For PUT request (update treatment)
+        return this.http.put(`${this.baseUrl}treatments/manage/${treatmentId}/`, treatmentData, { headers });
+      } else {
+        // For DELETE request (delete treatment)
+        return this.http.delete(`${this.baseUrl}treatments/manage/${treatmentId}/`, { headers });
+      }
+    } else {
+      // For POST request (create treatment)
+      return this.http.post(`${this.baseUrl}treatments/manage/`, treatmentData, { headers });
     }
-    return this.http.post(`${this.baseUrl}treatments/manage/`, treatmentData, { headers });
   }
+  
+  // Method to fetch treatments
+  fetchTreatments(treatmentId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    
+    if (treatmentId) {
+      // For GET request for a single treatment
+      return this.http.get(`${this.baseUrl}treatments/manage/${treatmentId}/`, { headers });
+    } else {
+      // For GET request for all treatments
+      return this.http.get(`${this.baseUrl}treatments/manage/`, { headers });
+    }
+  }
+  
+  
 
   deleteTreatment(treatmentId: number): Observable<any> {
     const headers = this.getAuthHeaders();

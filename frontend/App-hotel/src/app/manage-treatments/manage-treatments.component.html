@@ -1,1 +1,45 @@
-<p>manage-treatments works!</p>
+<!-- manage-treatments.component.html -->
+
+<h2>Treatments</h2>
+
+<div>
+  <h3>Create New Treatment</h3>
+  <div>
+    <label for="new-name">Name:</label>
+    <input id="new-name" #newName>
+    <label for="new-description">Description:</label>
+    <input id="new-description" #newDescription>
+    <label for="new-price">Price:</label>
+    <input id="new-price" #newPrice type="number">
+    <button (click)="createTreatment({ name: newName.value, description: newDescription.value, price: newPrice.value })">Create Treatment</button>
+  </div>
+</div>
+
+<ng-container *ngIf="treatments.length > 0; else treatmentsEmpty">
+  <div class="treatment-container">
+    <div *ngFor="let treatment of treatments" class="treatment-card">
+      <div class="treatment-header">
+        <h3>Treatment #{{ treatment.id }}</h3>
+      </div>
+      <div class="treatment-details">
+        <p><strong>Name:</strong> {{ treatment.name }}</p>
+        <p><strong>Description:</strong> {{ treatment.description }}</p>
+        <p><strong>Price:</strong> {{ treatment.price }}</p>
+      </div>
+      <button (click)="deleteTreatment(treatment.id)" class="warn-button">Delete Treatment</button>
+      <div>
+        <label for="name-{{ treatment.id }}">Name:</label>
+        <input id="name-{{ treatment.id }}" #nameInput value="{{ treatment.name }}">
+        <label for="description-{{ treatment.id }}">Description:</label>
+        <input id="description-{{ treatment.id }}" #descriptionInput value="{{ treatment.description }}">
+        <label for="price-{{ treatment.id }}">Price:</label>
+        <input id="price-{{ treatment.id }}" #priceInput type="number" value="{{ treatment.price }}">
+        <button (click)="updateTreatment(treatment.id, { name: nameInput.value, description: descriptionInput.value, price: priceInput.value })">Update Treatment</button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #treatmentsEmpty>
+  <p>No treatments available.</p>
+</ng-template>

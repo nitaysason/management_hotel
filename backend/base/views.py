@@ -259,18 +259,32 @@ def manage_tickets(request, ticket_id=None):
         ticket.delete()
         return Response("Ticket deleted", status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def manage_treatments(request, treatment_id=None):
     if not request.user.is_staff:
         return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        if treatment_id:
+            try:
+                treatment = Treatment.objects.get(id=treatment_id)
+                serializer = TreatmentSerializer(treatment)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Treatment.DoesNotExist:
+                return Response("Treatment not found", status=status.HTTP_404_NOT_FOUND)
+        else:
+            treatments = Treatment.objects.all()
+            serializer = TreatmentSerializer(treatments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
         serializer = TreatmentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'PUT':
         try:
             treatment = Treatment.objects.get(id=treatment_id)
@@ -281,6 +295,7 @@ def manage_treatments(request, treatment_id=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'DELETE':
         try:
             treatment = Treatment.objects.get(id=treatment_id)
