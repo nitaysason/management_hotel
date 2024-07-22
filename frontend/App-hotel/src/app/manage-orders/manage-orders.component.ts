@@ -1,25 +1,33 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-manage-orders',
   templateUrl: './manage-orders.component.html',
-  styleUrls: ['./manage-orders.component.css']
+  styleUrls: ['./manage-orders.component.css'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class ManageOrdersComponent implements OnInit {
   orders: any[] = [];
-  newOrder: any = {};
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.fetchOrders();
   }
 
   fetchOrders() {
-    this.authService.getOrders().subscribe(
+    this.authService.manageOrders().subscribe(
       (data: any[]) => {
-        this.orders = data;
+        this.orders = data.map(order => ({
+          id: order.id,
+          client: order.client,
+          // Adjusted fields based on the provided JSON structure
+          treatment: order.treatment, // Assuming treatment represents the room
+          date: new Date(order.created_at).toLocaleDateString(), // Correct date field
+        }));
       },
       error => {
         console.error('Error fetching orders', error);
@@ -27,40 +35,47 @@ export class ManageOrdersComponent implements OnInit {
     );
   }
 
-  addOrder() {
-    this.authService.manageOrders(this.newOrder).subscribe(
-      response => {
-        console.log('Order added successfully', response);
-        this.fetchOrders(); // Refresh orders list after adding
-        this.newOrder = {}; // Clear new order data
-      },
-      error => {
-        console.error('Error adding order', error);
-      }
-    );
-  }
-
-  updateOrder(orderId: number) {
-    this.authService.manageOrders(this.newOrder, orderId).subscribe(
-      response => {
-        console.log('Order updated successfully', response);
-        this.fetchOrders(); // Refresh orders list after updating
-        this.newOrder = {}; // Clear new order data
-      },
-      error => {
-        console.error('Error updating order', error);
-      }
-    );
-  }
-
   deleteOrder(orderId: number) {
-    this.authService.deleteOrder(orderId).subscribe(
-      response => {
-        console.log('Order deleted successfully', response);
-        this.fetchOrders(); // Refresh orders list after deleting
+    this.authService.manageOrders(null, orderId).subscribe(
+      () => {
+        this.orders = this.orders.filter(order => order.id !== orderId);
+        console.log('Order deleted successfully');
       },
       error => {
         console.error('Error deleting order', error);
+      }
+    );
+  }
+  
+  createOrder(orderData: any) {
+    this.authService.manageOrders(orderData).subscribe(
+      (newOrder: any) => {
+        this.orders.push({
+          id: newOrder.id,
+          client: newOrder.client,
+          treatment: newOrder.treatment,
+          date: new Date(newOrder.created_at).toLocaleDateString(), // Correct date field
+        });
+        console.log('Order created successfully');
+      },
+      error => {
+        console.error('Error creating order', error);
+      }
+    );
+  }
+
+  updateOrder(orderId: number, updatedData: any) {
+    this.authService.manageOrders(updatedData, orderId).subscribe(
+      (updatedOrder: any) => {
+        this.orders = this.orders.map(order =>
+          order.id === updatedOrder.id
+            ? { ...order, ...updatedOrder, date: new Date(updatedOrder.created_at).toLocaleDateString() }
+            : order
+        );
+        console.log('Order updated successfully');
+      },
+      error => {
+        console.error('Error updating order', error);
       }
     );
   }

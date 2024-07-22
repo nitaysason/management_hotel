@@ -112,13 +112,31 @@ export class AuthService {
     return this.http.get(`${this.baseUrl}clients/`, { headers });
   }
 
-  manageOrders(orderData: any, orderId?: number): Observable<any> {
+  manageOrders(orderData?: any, orderId?: number): Observable<any> {
     const headers = this.getAuthHeaders();
+    let url = `${this.baseUrl}orders/manage/`;
+  
     if (orderId) {
-      return this.http.put(`${this.baseUrl}orders/manage/${orderId}/`, orderData, { headers });
+      url += `${orderId}/`;
     }
-    return this.http.post(`${this.baseUrl}orders/manage/`, orderData, { headers });
+  
+    if (orderData) {
+      if (orderId) {
+        // PUT request to update an existing order
+        return this.http.put(url, orderData, { headers });
+      } else {
+        // POST request to create a new order
+        return this.http.post(url, orderData, { headers });
+      }
+    } else if (orderId) {
+      // DELETE request to delete an existing order
+      return this.http.delete(url, { headers });
+    } else {
+      // GET request to fetch orders (either all or by ID)
+      return this.http.get(url, { headers });
+    }
   }
+  
 
   deleteOrder(orderId: number): Observable<any> {
     const headers = this.getAuthHeaders();
