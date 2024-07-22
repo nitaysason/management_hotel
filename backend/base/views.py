@@ -229,18 +229,32 @@ def manage_orders(request, order_id=None):
             serializer = OrderSerializer(orders, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def manage_tickets(request, ticket_id=None):
     if not request.user.is_staff:
         return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        if ticket_id:
+            try:
+                ticket = Ticket.objects.get(id=ticket_id)
+                serializer = TicketSerializer(ticket)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Ticket.DoesNotExist:
+                return Response("Ticket not found", status=status.HTTP_404_NOT_FOUND)
+        else:
+            tickets = Ticket.objects.all()
+            serializer = TicketSerializer(tickets, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
         serializer = TicketSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'PUT':
         try:
             ticket = Ticket.objects.get(id=ticket_id)
@@ -251,6 +265,7 @@ def manage_tickets(request, ticket_id=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'DELETE':
         try:
             ticket = Ticket.objects.get(id=ticket_id)

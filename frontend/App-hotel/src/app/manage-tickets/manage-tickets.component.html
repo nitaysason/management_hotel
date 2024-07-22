@@ -1,1 +1,39 @@
-<p>manage-tickets works!</p>
+<h2>Tickets</h2>
+
+<div>
+  <h3>Create New Ticket</h3>
+  <div>
+    <label for="new-client">Client ID:</label>
+    <input id="new-client" #newClient>
+    <label for="new-attraction">Attraction ID:</label>
+    <input id="new-attraction" #newAttraction>
+    <button (click)="createTicket({ client: newClient.value, attraction: newAttraction.value })">Create Ticket</button>
+  </div>
+</div>
+
+<ng-container *ngIf="tickets.length > 0; else ticketsEmpty">
+  <div class="ticket-container">
+    <div *ngFor="let ticket of tickets" class="ticket-card">
+      <div class="ticket-header">
+        <h3>Ticket #{{ ticket.id }}</h3>
+      </div>
+      <div class="ticket-details">
+        <p><strong>Created At:</strong> {{ ticket.createdAt }}</p>
+        <p><strong>Client ID:</strong> {{ ticket.client }}</p>
+        <p><strong>Attraction ID:</strong> {{ ticket.attraction }}</p>
+      </div>
+      <button (click)="deleteTicket(ticket.id)" class="warn-button">Delete Ticket</button>
+      <div>
+        <label for="client-{{ ticket.id }}">Client ID:</label>
+        <input id="client-{{ ticket.id }}" #clientInput value="{{ ticket.client }}">
+        <label for="attraction-{{ ticket.id }}">Attraction ID:</label>
+        <input id="attraction-{{ ticket.id }}" #attractionInput value="{{ ticket.attraction }}">
+        <button (click)="updateTicket(ticket.id, { client: clientInput.value, attraction: attractionInput.value })">Update Ticket</button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #ticketsEmpty>
+  <p>No tickets available.</p>
+</ng-template>

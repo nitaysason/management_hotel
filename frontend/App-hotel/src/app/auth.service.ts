@@ -143,14 +143,31 @@ export class AuthService {
     return this.http.delete(`${this.baseUrl}orders/manage/${orderId}/`, { headers });
   }
 
-  manageTickets(ticketData: any, ticketId?: number): Observable<any> {
+  manageTickets(ticketData?: any, ticketId?: number): Observable<any> {
     const headers = this.getAuthHeaders();
+    
     if (ticketId) {
+      // For PUT request (update ticket)
       return this.http.put(`${this.baseUrl}tickets/manage/${ticketId}/`, ticketData, { headers });
     }
+    // For POST request (create ticket)
     return this.http.post(`${this.baseUrl}tickets/manage/`, ticketData, { headers });
   }
+  
+  // Method to fetch tickets
+  fetchTickets(ticketId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    
+    if (ticketId) {
+      // For GET request for a single ticket
+      return this.http.get(`${this.baseUrl}tickets/manage/${ticketId}/`, { headers });
+    } else {
+      // For GET request for all tickets
+      return this.http.get(`${this.baseUrl}tickets/manage/`, { headers });
+    }
+  }
 
+  // Method to delete a ticket
   deleteTicket(ticketId: number): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}tickets/manage/${ticketId}/`, { headers });
