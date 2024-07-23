@@ -22,8 +22,11 @@ import { MatButtonModule } from '@angular/material/button';
 export class RoomsComponent implements OnInit {
   rooms: any[] = [];
   reservationData: Map<number, any> = new Map();
+  today: string;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    this.today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+  }
 
   ngOnInit() {
     this.fetchRooms();
@@ -46,13 +49,33 @@ export class RoomsComponent implements OnInit {
   makeReservation(roomId: number) {
     const client_id = localStorage.getItem('client_id');
     if (client_id) {
-      const reservationData = {
+      const reservationData = this.reservationData.get(roomId);
+      const check_in_date = reservationData.check_in_date;
+      const check_out_date = reservationData.check_out_date;
+
+      if (!check_in_date || !check_out_date) {
+        alert('Please select both check-in and check-out dates.');
+        return;
+      }
+
+      if (new Date(check_in_date) < new Date(this.today)) {
+        alert('Check-in date cannot be in the past.');
+        return;
+      }
+
+      if (new Date(check_out_date) <= new Date(check_in_date)) {
+        alert('Check-out date must be after check-in date.');
+        return;
+      }
+
+      const reservationPayload = {
         room: roomId,
         client: Number(client_id),  // Ensure client_id is a number
-        check_in_date: this.reservationData.get(roomId).check_in_date,
-        check_out_date: this.reservationData.get(roomId).check_out_date
+        check_in_date: check_in_date,
+        check_out_date: check_out_date
       };
-      this.authService.makeReservation(reservationData).subscribe(
+
+      this.authService.makeReservation(reservationPayload).subscribe(
         response => {
           console.log('Reservation made successfully', response);
           alert('Reservation made successfully');

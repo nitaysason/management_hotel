@@ -11,15 +11,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   imports: [CommonModule, ReactiveFormsModule]
 })
 export class ReservationsComponent implements OnInit {
-cancelReservation(arg0: any) {
-throw new Error('Method not implemented.');
-}
   reservations: any[] = [];
   isStaff: boolean = false;
   editForm: FormGroup;
   editingReservationId: number | null = null;
+  today: string;
 
   constructor(private authService: AuthService, private fb: FormBuilder) {
+    this.today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
     this.editForm = this.fb.group({
       id: [''],
       room: [''],
@@ -78,53 +77,62 @@ throw new Error('Method not implemented.');
     const endDate = this.editForm.get('end_date')?.value;
   
     if (!startDate || !endDate) {
-      console.error('Start date or end date is missing');
+      alert('Please select both start and end dates.');
+      return;
+    }
+  
+    if (new Date(startDate) < new Date(this.today)) {
+      alert('Start date cannot be in the past.');
+      return;
+    }
+  
+    if (new Date(endDate) <= new Date(startDate)) {
+      alert('End date must be after start date.');
       return;
     }
   
     const data = {
       ...this.editForm.value,
-      check_in_date: this.convertToBackendDate(startDate),
-      check_out_date: this.convertToBackendDate(endDate)
+      check_in_date: startDate,
+      check_out_date: endDate
     };
   
-    console.log('Updating reservation with data:', data);
-  
-    // Example API call (replace with your actual update method):
-    // this.reservationService.updateReservation(id, data).subscribe(response => {
-    //   console.log('Reservation updated successfully', response);
-    // });
-
     if (id) {
       this.authService.updateReservation(id, data).subscribe(
         response => {
           console.log('Reservation updated successfully:', response);
           this.fetchReservations();
+          this.editingReservationId = null;
+          this.editForm.reset();
         },
         error => {
           console.error('Error updating reservation:', error);
+          alert('Error updating reservation: ' + JSON.stringify(error.error));
         }
       );
     } else {
       console.error('ID is undefined');
+      alert('ID is undefined. Please try again.');
     }
   }
-  convertToBackendDate(date: Date | string | null): string {
-    if (!date) return '';
-  
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    if (isNaN(dateObj.getTime())) return ''; // Handle invalid dates
-  
-    const year = dateObj.getFullYear();
-    const month = ('0' + (dateObj.getMonth() + 1)).slice(-2); // Months are zero-based
-    const day = ('0' + dateObj.getDate()).slice(-2);
-  
-    return `${year}-${month}-${day}`;
-  }
-  
 
   cancelEdit() {
     this.editingReservationId = null;
     this.editForm.reset();
+  }
+
+  cancelReservation(reservationId: number) {
+    if (confirm('Are you sure you want to cancel this reservation?')) {
+      this.authService.cancelReservation(reservationId).subscribe(
+        response => {
+          console.log('Reservation cancelled successfully:', response);
+          this.fetchReservations();
+        },
+        error => {
+          console.error('Error cancelling reservation:', error);
+          alert('Error cancelling reservation: ' + JSON.stringify(error.error));
+        }
+      );
+    }
   }
 }

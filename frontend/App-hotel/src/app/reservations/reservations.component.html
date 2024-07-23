@@ -1,4 +1,3 @@
-<!-- reservations.component.html -->
 <h2 class="title">Reservations</h2>
 
 <ng-container *ngIf="reservations.length > 0; else reservationsEmpty">
@@ -31,11 +30,11 @@
           </div>
           <div class="form-group">
             <label for="start_date">Start Date:</label>
-            <input id="start_date" formControlName="start_date" type="date">
+            <input id="start_date" formControlName="start_date" type="date" [min]="today">
           </div>
           <div class="form-group">
             <label for="end_date">End Date:</label>
-            <input id="end_date" formControlName="end_date" type="date">
+            <input id="end_date" formControlName="end_date" type="date" [min]="editForm.get('start_date')?.value || today">
           </div>
           <div class="button-group">
             <button type="submit" mat-raised-button color="primary">Save</button>
