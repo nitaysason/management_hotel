@@ -48,4 +48,4 @@ class TicketSerializer(serializers.ModelSerializer):
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
-        fields = '__all__'
+        fields = ['id', 'client', 'subject', 'message', 'response', 'created_at']

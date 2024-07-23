@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import (get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
-                    make_reservation, view_reservations, cancel_reservation,update_reservation, order_treatment, view_orders, 
+from .views import (delete_contact_message, get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
+                    make_reservation, respond_contact_message, view_reservations, cancel_reservation,update_reservation, order_treatment, view_orders, 
                     book_ticket, view_tickets, contact_hotel, view_clients, manage_orders, manage_tickets, manage_treatments)
 
 urlpatterns = [
@@ -19,6 +19,8 @@ urlpatterns = [
     path('tickets/view/', view_tickets, name='view_tickets'),
     path('contact/', contact_hotel, name='contact_hotel'),
     path('contact/messages/', get_contact_messages, name='get_contact_messages'),
+    path('contact/messages/respond/<int:pk>/', respond_contact_message, name='respond_contact_message'),
+    path('contact/messages/delete/<int:pk>/', delete_contact_message, name='delete_contact_message'),
     path('treatments/', get_treatments, name='get_treatments'),
     path('clients/', view_clients, name='view_clients'),
     path('orders/manage/', manage_orders, name='manage_orders'),  # For POST

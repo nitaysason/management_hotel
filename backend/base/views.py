@@ -186,6 +186,8 @@ def view_tickets(request):
     tickets = Ticket.objects.filter(client=request.user.client)
     serializer = TicketSerializer(tickets, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_contact_messages(request):
@@ -211,6 +213,34 @@ def contact_hotel(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def respond_contact_message(request, pk):
+    try:
+        contact_message = ContactMessage.objects.get(pk=pk)
+    except ContactMessage.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.user.is_staff:
+        contact_message.response = request.data.get('response', '')
+        contact_message.save()
+        return Response(ContactMessageSerializer(contact_message).data)
+    else:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_contact_message(request, pk):
+    try:
+        contact_message = ContactMessage.objects.get(pk=pk)
+    except ContactMessage.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.user.is_staff:
+        contact_message.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
 # Staff-specific views
 @api_view(['GET'])

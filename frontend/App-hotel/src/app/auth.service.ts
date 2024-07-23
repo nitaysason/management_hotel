@@ -105,7 +105,6 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.get(`${this.baseUrl}tickets/view/`, { headers });
   }
-
   contactHotel(contactData: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}contact/`, contactData, { headers });
@@ -114,6 +113,16 @@ export class AuthService {
   getContactMessages(): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.get(`${this.baseUrl}contact/messages/`, { headers });
+  }
+
+  respondContactMessage(messageId: number, responseData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.put(`${this.baseUrl}contact/messages/respond/${messageId}/`, responseData, { headers });
+  }
+
+  deleteContactMessage(messageId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}contact/messages/delete/${messageId}/`, { headers });
   }
 
   // Staff operations

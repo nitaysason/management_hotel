@@ -1,4 +1,3 @@
-<!-- contact.component.html -->
 <h2 class="title">Contact Messages</h2>
 
 <ng-container *ngIf="contactMessages.length > 0; else contactMessagesEmpty">
@@ -11,6 +10,14 @@
         <p><strong>Client ID:</strong> {{ message.client }}</p>
         <p><strong>Subject:</strong> {{ message.subject }}</p>
         <p><strong>Message:</strong> {{ message.message }}</p>
+        <p><strong>Response:</strong> {{ message.response || 'No response yet' }}</p>
+        <ng-container *ngIf="isStaff">
+          <div class="button-group">
+            <textarea [(ngModel)]="responseData.response" placeholder="Write a response"></textarea>
+            <button (click)="respondToMessage(message.id)" class="respond-button">Respond</button>
+            <button (click)="deleteMessage(message.id)" class="delete-button">Delete</button>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -20,7 +27,6 @@
   <p>No contact messages available.</p>
 </ng-template>
 
-<!-- Form to send a new contact message -->
 <h2 class="title">Send a Contact Message</h2>
 <form #contactForm="ngForm" (ngSubmit)="sendContactMessage()" class="contact-form">
   <div class="form-group">

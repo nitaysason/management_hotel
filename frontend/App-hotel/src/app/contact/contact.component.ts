@@ -13,11 +13,19 @@ import { FormsModule } from '@angular/forms';
 export class ContactComponent implements OnInit {
   contactMessages: any[] = [];
   contactData = { subject: '', message: '' };
+  isStaff: boolean = false;
+  responseData = { response: '' };
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    this.checkUserRole();
     this.fetchContactMessages();
+  }
+
+  checkUserRole() {
+    const staffId = localStorage.getItem('staff_id');
+    this.isStaff = !!staffId;
   }
 
   fetchContactMessages() {
@@ -53,5 +61,29 @@ export class ContactComponent implements OnInit {
       console.error('Client ID not found in localStorage');
       alert('Client ID not found. Please log in again.');
     }
+  }
+
+  respondToMessage(messageId: number) {
+    this.authService.respondContactMessage(messageId, this.responseData).subscribe(
+      response => {
+        console.log('Response sent successfully', response);
+        this.fetchContactMessages();
+      },
+      error => {
+        console.error('Error sending response', error);
+      }
+    );
+  }
+
+  deleteMessage(messageId: number) {
+    this.authService.deleteContactMessage(messageId).subscribe(
+      response => {
+        console.log('Message deleted successfully');
+        this.fetchContactMessages();
+      },
+      error => {
+        console.error('Error deleting message', error);
+      }
+    );
   }
 }
