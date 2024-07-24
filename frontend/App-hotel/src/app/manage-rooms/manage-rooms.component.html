@@ -1,4 +1,3 @@
-<!-- manage-rooms.component.html -->
 <h2 class="title">Rooms</h2>
 
 <div class="new-room">
@@ -19,7 +18,14 @@
     <label for="new-price">Price per Night:</label>
     <input id="new-price" #newPrice type="number" step="0.01">
   </div>
-  <button class="btn create-btn" (click)="createRoom({ number: newNumber.value, room_type: newRoomType.value, description: newDescription.value, price_per_night: newPrice.value })">Create Room</button>
+  <div class="form-group">
+    <label for="new-availability">Available:</label>
+    <select id="new-availability" #newAvailability>
+      <option [value]="true">Yes</option>
+      <option [value]="false">No</option>
+    </select>
+  </div>
+  <button class="btn create-btn" (click)="createRoom({ number: newNumber.value, room_type: newRoomType.value, description: newDescription.value, price_per_night: newPrice.value, is_available: newAvailability.value === 'true' })">Create Room</button>
 </div>
 
 <ng-container *ngIf="rooms.length > 0; else roomsEmpty">
@@ -33,6 +39,7 @@
         <p><strong>Room Type:</strong> {{ room.room_type }}</p>
         <p><strong>Description:</strong> {{ room.description }}</p>
         <p><strong>Price per Night:</strong> {{ room.price_per_night | currency }}</p>
+        <p><strong>Available:</strong> {{ room.is_available ? 'Yes' : 'No' }}</p>
       </div>
       <button (click)="deleteRoom(room.id)" class="btn warn-btn">Delete Room</button>
       <div class="form-group">
@@ -51,7 +58,14 @@
         <label for="price-{{ room.id }}">Price per Night:</label>
         <input id="price-{{ room.id }}" #priceInput type="number" step="0.01" value="{{ room.price_per_night }}">
       </div>
-      <button class="btn update-btn" (click)="updateRoom(room.id, { number: numberInput.value, room_type: roomTypeInput.value, description: descriptionInput.value, price_per_night: priceInput.value })">Update Room</button>
+      <div class="form-group">
+        <label for="availability-{{ room.id }}">Available:</label>
+        <select id="availability-{{ room.id }}" #availabilityInput [value]="room.is_available">
+          <option [value]="true">Yes</option>
+          <option [value]="false">No</option>
+        </select>
+      </div>
+      <button class="btn update-btn" (click)="updateRoom(room.id, { number: numberInput.value, room_type: roomTypeInput.value, description: descriptionInput.value, price_per_night: priceInput.value, is_available: availabilityInput.value === 'true' })">Update Room</button>
     </div>
   </div>
 </ng-container>

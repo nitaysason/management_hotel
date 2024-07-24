@@ -26,7 +26,8 @@ export class ManageRoomsComponent implements OnInit {
           number: room.number,
           room_type: room.room_type,
           description: room.description,
-          price_per_night: room.price_per_night
+          price_per_night: room.price_per_night,
+          is_available: room.is_available
         }));
       },
       error => {
@@ -43,7 +44,8 @@ export class ManageRoomsComponent implements OnInit {
           number: newRoom.number,
           room_type: newRoom.room_type,
           description: newRoom.description,
-          price_per_night: newRoom.price_per_night
+          price_per_night: newRoom.price_per_night,
+          is_available: newRoom.is_available
         });
         console.log('Room created successfully');
       },

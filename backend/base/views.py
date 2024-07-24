@@ -95,6 +95,7 @@ class RoomView(APIView):
         room.delete()
         return Response("Room deleted", status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def make_reservation(request):
