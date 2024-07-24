@@ -1,0 +1,61 @@
+<!-- manage-rooms.component.html -->
+<h2 class="title">Rooms</h2>
+
+<div class="new-room">
+  <h3>Create New Room</h3>
+  <div class="form-group">
+    <label for="new-number">Number:</label>
+    <input id="new-number" #newNumber>
+  </div>
+  <div class="form-group">
+    <label for="new-room-type">Room Type:</label>
+    <input id="new-room-type" #newRoomType>
+  </div>
+  <div class="form-group">
+    <label for="new-description">Description:</label>
+    <input id="new-description" #newDescription>
+  </div>
+  <div class="form-group">
+    <label for="new-price">Price per Night:</label>
+    <input id="new-price" #newPrice type="number" step="0.01">
+  </div>
+  <button class="btn create-btn" (click)="createRoom({ number: newNumber.value, room_type: newRoomType.value, description: newDescription.value, price_per_night: newPrice.value })">Create Room</button>
+</div>
+
+<ng-container *ngIf="rooms.length > 0; else roomsEmpty">
+  <div class="room-container">
+    <div *ngFor="let room of rooms" class="room-card">
+      <div class="room-header">
+        <h3>Room #{{ room.id }}</h3>
+      </div>
+      <div class="room-details">
+        <p><strong>Number:</strong> {{ room.number }}</p>
+        <p><strong>Room Type:</strong> {{ room.room_type }}</p>
+        <p><strong>Description:</strong> {{ room.description }}</p>
+        <p><strong>Price per Night:</strong> {{ room.price_per_night | currency }}</p>
+      </div>
+      <button (click)="deleteRoom(room.id)" class="btn warn-btn">Delete Room</button>
+      <div class="form-group">
+        <label for="number-{{ room.id }}">Number:</label>
+        <input id="number-{{ room.id }}" #numberInput value="{{ room.number }}">
+      </div>
+      <div class="form-group">
+        <label for="room-type-{{ room.id }}">Room Type:</label>
+        <input id="room-type-{{ room.id }}" #roomTypeInput value="{{ room.room_type }}">
+      </div>
+      <div class="form-group">
+        <label for="description-{{ room.id }}">Description:</label>
+        <input id="description-{{ room.id }}" #descriptionInput value="{{ room.description }}">
+      </div>
+      <div class="form-group">
+        <label for="price-{{ room.id }}">Price per Night:</label>
+        <input id="price-{{ room.id }}" #priceInput type="number" step="0.01" value="{{ room.price_per_night }}">
+      </div>
+      <button class="btn update-btn" (click)="updateRoom(room.id, { number: numberInput.value, room_type: roomTypeInput.value, description: descriptionInput.value, price_per_night: priceInput.value })">Update Room</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #roomsEmpty>
+  <p>No rooms available.</p>
+</ng-template>

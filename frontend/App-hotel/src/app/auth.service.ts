@@ -10,7 +10,6 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
 
   private baseUrl = 'http://127.0.0.1:8000/';
-  apiUrl: any;
 
   constructor(private http: HttpClient) { }
 
@@ -77,14 +76,11 @@ export class AuthService {
     return this.http.delete(`${this.baseUrl}reservations/cancel/${reservationId}/`, { headers });
   }
 
-// auth.service.ts
   updateReservation(id: number, data: any): Observable<any> {
     const url = `${this.baseUrl}reservations/update/${id}/`; // Correct URL construction
     const headers = this.getAuthHeaders();
     return this.http.put(url, data, { headers });
   }
-
-
 
   getTreatments(): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -105,6 +101,7 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.get(`${this.baseUrl}tickets/view/`, { headers });
   }
+
   contactHotel(contactData: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}contact/`, contactData, { headers });
@@ -156,7 +153,6 @@ export class AuthService {
     }
   }
   
-
   deleteOrder(orderId: number): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}orders/manage/${orderId}/`, { headers });
@@ -173,7 +169,6 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}tickets/manage/`, ticketData, { headers });
   }
   
-  // Method to fetch tickets
   fetchTickets(ticketId?: number): Observable<any> {
     const headers = this.getAuthHeaders();
     
@@ -186,7 +181,6 @@ export class AuthService {
     }
   }
 
-  // Method to delete a ticket
   deleteTicket(ticketId: number): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}tickets/manage/${ticketId}/`, { headers });
@@ -210,7 +204,6 @@ export class AuthService {
     }
   }
   
-  // Method to fetch treatments
   fetchTreatments(treatmentId?: number): Observable<any> {
     const headers = this.getAuthHeaders();
     
@@ -222,11 +215,32 @@ export class AuthService {
       return this.http.get(`${this.baseUrl}treatments/manage/`, { headers });
     }
   }
-  
-  
 
   deleteTreatment(treatmentId: number): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}treatments/manage/${treatmentId}/`, { headers });
+  }
+  
+  // Rooms management methods
+  fetchRooms(): Observable<any[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any[]>(`${this.baseUrl}rooms/`, { headers });
+  }
+  
+  manageRooms(roomData: any, roomId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    
+    if (roomId) {
+      // For PUT request (update room)
+      return this.http.put<any>(`${this.baseUrl}rooms/${roomId}/`, roomData, { headers });
+    } else {
+      // For POST request (create room)
+      return this.http.post<any>(`${this.baseUrl}rooms/`, roomData, { headers });
+    }
+  }
+  
+  deleteRoom(roomId: number): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}rooms/${roomId}/`, { headers });
   }
 }
