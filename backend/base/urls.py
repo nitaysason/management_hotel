@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (delete_contact_message, get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
+from .views import (AttractionView, delete_contact_message, get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
                     make_reservation, respond_contact_message, view_reservations, cancel_reservation,update_reservation, order_treatment, view_orders, 
                     book_ticket, view_tickets, contact_hotel, view_clients, manage_orders, manage_tickets, manage_treatments)
 
@@ -27,6 +27,8 @@ urlpatterns = [
     path('orders/manage/<int:order_id>/', manage_orders, name='manage_order'),  # For PUT and DELETE
     path('tickets/manage/', manage_tickets, name='manage_tickets'),  # For POST
     path('tickets/manage/<int:ticket_id>/', manage_tickets, name='manage_ticket'),  # For PUT and DELETE
+    path('attractions/manage/', AttractionView.as_view(), name='manage_attractions'),  # For POST and GET all
+    path('attractions/manage/<int:attraction_id>/', AttractionView.as_view(), name='manage_attraction'),  # For GET, PUT, and DELETE
     path('treatments/manage/', manage_treatments, name='manage_treatments'),  # For POST
     path('treatments/manage/<int:treatment_id>/', manage_treatments, name='manage_treatment'),  # For PUT and DELETE
 ]

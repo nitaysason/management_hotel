@@ -1,8 +1,8 @@
 // src/app/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -243,4 +243,51 @@ export class AuthService {
     const headers = this.getAuthHeaders();
     return this.http.delete<void>(`${this.baseUrl}rooms/${roomId}/`, { headers });
   }
+  fetchAttractions(): Observable<any[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any[]>(`${this.baseUrl}attractions/manage/`, { headers }).pipe(
+      catchError(err => {
+        console.error('Error fetching attractions', err);
+        return throwError(err);
+      })
+    );
+  }
+
+  manageAttractions(attractionData: any, attractionId?: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+
+    if (attractionId) {
+      console.log(`Updating attraction with ID ${attractionId}`);
+      console.log(`Data:`, attractionData);
+      return this.http.put<any>(`${this.baseUrl}attractions/manage/${attractionId}/`, attractionData, { headers }).pipe(
+        catchError(err => {
+          console.error('Error managing attraction', err);
+          return throwError(err);
+        })
+      );
+    } else {
+      console.log(`Creating new attraction`);
+      console.log(`Data:`, attractionData);
+      return this.http.post<any>(`${this.baseUrl}attractions/manage/`, attractionData, { headers }).pipe(
+        catchError(err => {
+          console.error('Error managing attraction', err);
+          return throwError(err);
+        })
+      );
+    }
+  }
+
+  deleteAttraction(attractionId: number): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}attractions/manage/${attractionId}/`, { headers }).pipe(
+      catchError(err => {
+        console.error('Error deleting attraction', err);
+        return throwError(err);
+      })
+    );
+  }
 }
+
+  
+
+

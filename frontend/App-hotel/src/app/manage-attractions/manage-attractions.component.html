@@ -1,0 +1,51 @@
+<h2 class="title">Attractions</h2>
+
+<div class="new-attraction">
+  <h3>Create New Attraction</h3>
+  <div class="form-group">
+    <label for="new-name">Name:</label>
+    <input id="new-name" #newName>
+  </div>
+  <div class="form-group">
+    <label for="new-description">Description:</label>
+    <input id="new-description" #newDescription>
+  </div>
+  <div class="form-group">
+    <label for="new-price">Price:</label>
+    <input id="new-price" #newPrice type="number">
+  </div>
+  <button class="btn create-btn" (click)="createAttraction({ name: newName.value, description: newDescription.value, price: newPrice.value })">Create Attraction</button>
+</div>
+
+<ng-container *ngIf="attractions.length > 0; else attractionsEmpty">
+  <div class="attraction-container">
+    <div *ngFor="let attraction of attractions" class="attraction-card">
+      <div class="attraction-header">
+        <h3>Attraction #{{ attraction.id }}</h3>
+      </div>
+      <div class="attraction-details">
+        <p><strong>Name:</strong> {{ attraction.name }}</p>
+        <p><strong>Description:</strong> {{ attraction.description }}</p>
+        <p><strong>Price:</strong> {{ attraction.price | currency }}</p>
+      </div>
+      <button (click)="deleteAttraction(attraction.id)" class="btn warn-btn">Delete Attraction</button>
+      <div class="form-group">
+        <label for="name-{{ attraction.id }}">Name:</label>
+        <input id="name-{{ attraction.id }}" #nameInput value="{{ attraction.name }}">
+      </div>
+      <div class="form-group">
+        <label for="description-{{ attraction.id }}">Description:</label>
+        <input id="description-{{ attraction.id }}" #descriptionInput value="{{ attraction.description }}">
+      </div>
+      <div class="form-group">
+        <label for="price-{{ attraction.id }}">Price:</label>
+        <input id="price-{{ attraction.id }}" #priceInput type="number" value="{{ attraction.price }}">
+      </div>
+      <button class="btn update-btn" (click)="updateAttraction(attraction.id, { name: nameInput.value, description: descriptionInput.value, price: priceInput.value })">Update Attraction</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #attractionsEmpty>
+  <p>No attractions available.</p>
+</ng-template>

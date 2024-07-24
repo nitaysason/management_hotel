@@ -387,3 +387,44 @@ def manage_treatments(request, treatment_id=None):
             return Response("Treatment not found", status=status.HTTP_404_NOT_FOUND)
         treatment.delete()
         return Response("Treatment deleted", status=status.HTTP_204_NO_CONTENT)
+    
+class AttractionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, attraction_id=None):
+        if attraction_id:
+            try:
+                attraction = Attraction.objects.get(id=attraction_id)
+                serializer = AttractionSerializer(attraction)
+            except Attraction.DoesNotExist:
+                return Response("Attraction not found", status=status.HTTP_404_NOT_FOUND)
+        else:
+            attractions = Attraction.objects.all()
+            serializer = AttractionSerializer(attractions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = AttractionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, attraction_id):
+        try:
+            attraction = Attraction.objects.get(id=attraction_id)
+        except Attraction.DoesNotExist:
+            return Response("Attraction not found", status=status.HTTP_404_NOT_FOUND)
+        serializer = AttractionSerializer(attraction, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, attraction_id):
+        try:
+            attraction = Attraction.objects.get(id=attraction_id)
+        except Attraction.DoesNotExist:
+            return Response("Attraction not found", status=status.HTTP_404_NOT_FOUND)
+        attraction.delete()
+        return Response("Attraction deleted", status=status.HTTP_204_NO_CONTENT)

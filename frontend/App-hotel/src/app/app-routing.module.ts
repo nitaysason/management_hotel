@@ -14,6 +14,7 @@ import { ManageOrdersComponent } from './manage-orders/manage-orders.component';
 import { ManageTicketsComponent } from './manage-tickets/manage-tickets.component';
 import { ManageTreatmentsComponent } from './manage-treatments/manage-treatments.component';
 import { ManageRoomsComponent } from './manage-rooms/manage-rooms.component';
+import { ManageAttractionsComponent } from './manage-attractions/manage-attractions.component';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'orders', component: OrdersComponent },
   { path: 'rooms', component: RoomsComponent },
   { path: 'manage-rooms', component: ManageRoomsComponent },
+  { path: 'manage-attractions', component: ManageAttractionsComponent },
   { path: 'reservations', component: ReservationsComponent },
   { path: 'treatments', component: TreatmentsComponent },
   { path: 'tickets', component: TicketsComponent },
