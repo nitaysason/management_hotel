@@ -1,17 +1,21 @@
-// src/app/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   private baseUrl = 'http://127.0.0.1:8000/';
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+  public loggedIn$ = this.loggedIn.asObservable();
 
   constructor(private http: HttpClient) { }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem('access_token');
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token');
@@ -31,17 +35,23 @@ export class AuthService {
         localStorage.setItem('access_token', response.access);
         localStorage.setItem('client_id', response.client_id || '');
         localStorage.setItem('staff_id', response.staff_id || '');
+        this.loggedIn.next(true);
       })
     );
   }
 
   logout(): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.post(`${this.baseUrl}logout/`, {}, { headers }).pipe(
+    return this.http.post<any>(`${this.baseUrl}logout/`, {}, { headers }).pipe(
       tap(() => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('client_id');
         localStorage.removeItem('staff_id');
+        this.loggedIn.next(false);
+      }),
+      catchError(err => {
+        console.error('Error during logout', err);
+        return throwError(err);
       })
     );
   }
@@ -286,6 +296,9 @@ export class AuthService {
       })
     );
   }
+
+  
+  
 }
 
   

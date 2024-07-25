@@ -3,21 +3,20 @@
   <span class="title">Hotel Management</span>
   <span class="spacer"></span>
   <div class="nav-links">
-    <a mat-button routerLink="/login">Login</a>
-    <a mat-button routerLink="/register">Register</a>
-    <a mat-button routerLink="/logout">Logout</a>
-    <a mat-button routerLink="/orders">Orders</a>
-    <a mat-button routerLink="/rooms">Rooms</a> <!-- Updated path for rooms -->
-    <a mat-button routerLink="/reservations">Reservations</a>
-    <a mat-button routerLink="/treatments">Treatments</a>
-    <a mat-button routerLink="/tickets">Tickets</a>
-    <a mat-button routerLink="/contact">Contact</a>
-    <!-- <a mat-button routerLink="/clients">Clients</a> -->
-    <a mat-button routerLink="/manage-orders">Manage Orders</a>
-    <a mat-button routerLink="/manage-tickets">Manage Tickets</a>
-    <a routerLink="/manage-attractions">Manage Attractions</a>
-    <a mat-button routerLink="/manage-treatments">Manage Treatments</a>
-    <a mat-button routerLink="/manage-rooms">Manage Rooms</a> <!-- Added path for manage rooms -->
+    <a mat-button routerLink="/login" *ngIf="!isLoggedIn">Login</a>
+    <a mat-button routerLink="/register" *ngIf="!isLoggedIn">Register</a>
+    <a mat-button routerLink="/logout" *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+    <a mat-button routerLink="/orders" *ngIf="isLoggedIn && !isStaff">Orders</a>
+    <a mat-button routerLink="/rooms" *ngIf="isLoggedIn && !isStaff">Rooms</a>
+    <a mat-button routerLink="/reservations" *ngIf="isLoggedIn">Reservations</a>
+    <a mat-button routerLink="/treatments" *ngIf="isLoggedIn && !isStaff">Treatments</a>
+    <a mat-button routerLink="/tickets" *ngIf="isLoggedIn && !isStaff">Tickets</a>
+    <a mat-button routerLink="/contact" *ngIf="isLoggedIn">Contact</a>
+    <a mat-button routerLink="/manage-orders" *ngIf="isLoggedIn && isStaff">Manage Orders</a>
+    <a mat-button routerLink="/manage-tickets" *ngIf="isLoggedIn && isStaff">Manage Tickets</a>
+    <a mat-button routerLink="/manage-attractions" *ngIf="isLoggedIn && isStaff">Manage Attractions</a>
+    <a mat-button routerLink="/manage-treatments" *ngIf="isLoggedIn && isStaff">Manage Treatments</a>
+    <a mat-button routerLink="/manage-rooms" *ngIf="isLoggedIn && isStaff">Manage Rooms</a>
   </div>
 </mat-toolbar>
 
