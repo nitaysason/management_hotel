@@ -1,4 +1,4 @@
-/* app.component.css */
+/* src/app/app.component.css */
 .title {
   font-weight: bold;
   font-size: 18px;
@@ -16,7 +16,7 @@ mat-toolbar {
 
 .nav-links {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line */
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -25,14 +25,27 @@ mat-toolbar a {
   text-decoration: none;
   margin: 0 8px;
   font-size: 14px;
-  white-space: nowrap; /* Prevents text wrapping in links */
+  white-space: nowrap;
 }
 
 mat-toolbar a:hover {
   text-decoration: underline;
-  background-color: rgba(255, 255, 255, 0.1); /* Slight highlight on hover */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.main-container {
+.background-container {
+  background-image: url('http://www.alp.co.il/hotelImage/19799.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 16px;
+  -webkit-filter: brightness(100%) contrast(100%);
+  filter: brightness(100%) contrast(100%);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimizeQuality;
 }
