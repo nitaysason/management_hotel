@@ -20,7 +20,7 @@ import { AuthService } from './auth.service';
 export class AppComponent implements OnInit {
   isLoggedIn: boolean = false;
   isStaff: boolean = false;
-
+  title = 'App-hotel'; 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
