@@ -1,25 +1,27 @@
 <!-- src/app/app.component.html -->
-<mat-toolbar color="primary">
-  <span class="title">Hotel Management</span>
-  <span class="spacer"></span>
-  <div class="nav-links">
-    <a mat-button routerLink="/login" *ngIf="!isLoggedIn">Login</a>
-    <a mat-button routerLink="/register" *ngIf="!isLoggedIn">Register</a>
-    <a mat-button routerLink="/logout" *ngIf="isLoggedIn" (click)="logout()">Logout</a>
-    <a mat-button routerLink="/orders" *ngIf="isLoggedIn && !isStaff">Orders</a>
-    <a mat-button routerLink="/rooms" *ngIf="isLoggedIn && !isStaff">Rooms</a>
-    <a mat-button routerLink="/reservations" *ngIf="isLoggedIn">Reservations</a>
-    <a mat-button routerLink="/treatments" *ngIf="isLoggedIn && !isStaff">Treatments</a>
-    <a mat-button routerLink="/tickets" *ngIf="isLoggedIn && !isStaff">Tickets</a>
-    <a mat-button routerLink="/contact" *ngIf="isLoggedIn">Contact</a>
-    <a mat-button routerLink="/manage-orders" *ngIf="isLoggedIn && isStaff">Manage Orders</a>
-    <a mat-button routerLink="/manage-tickets" *ngIf="isLoggedIn && isStaff">Manage Tickets</a>
-    <a mat-button routerLink="/manage-attractions" *ngIf="isLoggedIn && isStaff">Manage Attractions</a>
-    <a mat-button routerLink="/manage-treatments" *ngIf="isLoggedIn && isStaff">Manage Treatments</a>
-    <a mat-button routerLink="/manage-rooms" *ngIf="isLoggedIn && isStaff">Manage Rooms</a>
-  </div>
-</mat-toolbar>
+<div class="background-container" [ngStyle]="{'background-image': 'url(' + currentImage + ')'}">
+  <mat-toolbar color="primary">
+    <span class="title">Hotel Management</span>
+    <span class="spacer"></span>
+    <div class="nav-links">
+      <a mat-button routerLink="/login" *ngIf="!isLoggedIn">Login</a>
+      <a mat-button routerLink="/register" *ngIf="!isLoggedIn">Register</a>
+      <a mat-button routerLink="/logout" *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+      <a mat-button routerLink="/orders" *ngIf="isLoggedIn && !isStaff">Orders</a>
+      <a mat-button routerLink="/rooms" *ngIf="isLoggedIn && !isStaff">Rooms</a>
+      <a mat-button routerLink="/reservations" *ngIf="isLoggedIn">Reservations</a>
+      <a mat-button routerLink="/treatments" *ngIf="isLoggedIn && !isStaff">Treatments</a>
+      <a mat-button routerLink="/tickets" *ngIf="isLoggedIn && !isStaff">Tickets</a>
+      <a mat-button routerLink="/contact" *ngIf="isLoggedIn">Contact</a>
+      <a mat-button routerLink="/manage-orders" *ngIf="isLoggedIn && isStaff">Manage Orders</a>
+      <a mat-button routerLink="/manage-tickets" *ngIf="isLoggedIn && isStaff">Manage Tickets</a>
+      <a mat-button routerLink="/manage-attractions" *ngIf="isLoggedIn && isStaff">Manage Attractions</a>
+      <a mat-button routerLink="/manage-treatments" *ngIf="isLoggedIn && isStaff">Manage Treatments</a>
+      <a mat-button routerLink="/manage-rooms" *ngIf="isLoggedIn && isStaff">Manage Rooms</a>
+    </div>
+  </mat-toolbar>
 
-<div class="background-container">
-  <router-outlet></router-outlet>
+  <div class="main-container" [ngStyle]="{'background-image': 'url(' + currentImage + ')'}">
+    <router-outlet></router-outlet>
+  </div>
 </div>
