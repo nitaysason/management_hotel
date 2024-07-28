@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['POST'])
 def register(request):
+    """Registers a new user with the given username, email, and password."""
     username = request.data['username']
     email = request.data['email']
     password = request.data['password']
@@ -26,6 +27,7 @@ def register(request):
 
 @api_view(['POST'])
 def login_view(request):
+    """Logs in a user and returns JWT tokens if the credentials are valid."""
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(request, username=username, password=password)
@@ -51,13 +53,16 @@ def login_view(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
+    """Logs out the current user."""
     logout(request)
     return Response("User logged out", status=status.HTTP_200_OK)
 
 class RoomView(APIView):
+    """Handles CRUD operations for Room objects."""
     permission_classes = [IsAuthenticated]
 
     def get(self, request, room_id=None):
+        """Retrieves a specific room by ID or all rooms if no ID is provided."""
         if room_id:
             try:
                 room = Room.objects.get(id=room_id)
@@ -70,6 +75,7 @@ class RoomView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        """Creates a new room."""
         serializer = RoomSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -77,6 +83,7 @@ class RoomView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, room_id):
+        """Updates an existing room by ID."""
         try:
             room = Room.objects.get(id=room_id)
         except Room.DoesNotExist:
@@ -88,6 +95,7 @@ class RoomView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, room_id):
+        """Deletes a specific room by ID."""
         try:
             room = Room.objects.get(id=room_id)
         except Room.DoesNotExist:
@@ -99,6 +107,7 @@ class RoomView(APIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def make_reservation(request):
+    """Creates a new reservation."""
     serializer = ReservationSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -108,6 +117,7 @@ def make_reservation(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_reservations(request):
+    """Retrieves reservations for the current user or all reservations if the user is a staff member."""
     if request.user.is_staff:
         # Staff members can view all reservations
         reservations = Reservation.objects.all()
@@ -120,6 +130,7 @@ def view_reservations(request):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def cancel_reservation(request, reservation_id):
+    """Cancels a reservation by ID."""
     try:
         reservation = Reservation.objects.get(id=reservation_id)
         reservation.delete()
@@ -133,6 +144,7 @@ def cancel_reservation(request, reservation_id):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_reservation(request, reservation_id):
+    """Updates a reservation by ID."""
     try:
         reservation = Reservation.objects.get(id=reservation_id)
         if not request.user.is_staff and reservation.client != request.user.client:
@@ -151,6 +163,7 @@ def update_reservation(request, reservation_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_treatments(request):
+    """Retrieves all treatments."""
     treatments = Treatment.objects.all()
     serializer = TreatmentSerializer(treatments, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -159,6 +172,7 @@ def get_treatments(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def order_treatment(request):
+    """Creates a new treatment order."""
     serializer = OrderSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -168,6 +182,7 @@ def order_treatment(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_orders(request):
+    """Retrieves orders for the current user."""
     orders = Order.objects.filter(client=request.user.client)
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -175,6 +190,7 @@ def view_orders(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def book_ticket(request):
+    """Creates a new ticket booking."""
     serializer = TicketSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -184,6 +200,7 @@ def book_ticket(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_tickets(request):
+    """Retrieves tickets for the current user."""
     tickets = Ticket.objects.filter(client=request.user.client)
     serializer = TicketSerializer(tickets, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -192,6 +209,7 @@ def view_tickets(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_contact_messages(request):
+    """Retrieves contact messages for the current user or all messages if the user is a staff member.""" 
     if request.user.is_staff:
         # Staff user - return all contact messages
         contact_messages = ContactMessage.objects.all()
@@ -205,6 +223,7 @@ def get_contact_messages(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def contact_hotel(request):
+    """Saves a new contact message from the current user."""
     contact_data = request.data
     contact_data['client'] = request.user.id  # Ensure the message is associated with the logged-in user
     serializer = ContactMessageSerializer(data=contact_data)
@@ -217,6 +236,7 @@ def contact_hotel(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def respond_contact_message(request, pk):
+    """Responds to a contact message by ID."""
     try:
         contact_message = ContactMessage.objects.get(pk=pk)
     except ContactMessage.DoesNotExist:
@@ -232,6 +252,7 @@ def respond_contact_message(request, pk):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_contact_message(request, pk):
+    """Deletes a contact message by ID."""
     try:
         contact_message = ContactMessage.objects.get(pk=pk)
     except ContactMessage.DoesNotExist:
@@ -247,18 +268,24 @@ def delete_contact_message(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_clients(request):
+     # Check if the user is a staff member
     if not request.user.is_staff:
         return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
+     # Retrieve all clients
     clients = Client.objects.all()
+    # Serialize the client data
     serializer = ClientSerializer(clients, many=True)
+    # Return the serialized data with a 200 OK status
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Manage orders (Create, Retrieve, Update, Delete)
 @api_view(['POST', 'PUT', 'DELETE', 'GET'])
 @permission_classes([IsAuthenticated])
 def manage_orders(request, order_id=None):
+    # Check if the user is a staff member
     if not request.user.is_staff:
         return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
-
+    # Create a new order
     if request.method == 'POST':
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
@@ -266,6 +293,7 @@ def manage_orders(request, order_id=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    # Update an existing order
     elif request.method == 'PUT':
         try:
             order = Order.objects.get(id=order_id)
@@ -277,6 +305,7 @@ def manage_orders(request, order_id=None):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    # Delete an order
     elif request.method == 'DELETE':
         try:
             order = Order.objects.get(id=order_id)
@@ -284,7 +313,8 @@ def manage_orders(request, order_id=None):
             return Response("Order not found", status=status.HTTP_404_NOT_FOUND)
         order.delete()
         return Response("Order deleted", status=status.HTTP_204_NO_CONTENT)
-
+    
+    # Retrieve orders
     elif request.method == 'GET':
         if order_id:
             try:
@@ -297,13 +327,17 @@ def manage_orders(request, order_id=None):
             orders = Order.objects.all()
             serializer = OrderSerializer(orders, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
+# Manage tickets (Create, Retrieve, Update, Delete)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def manage_tickets(request, ticket_id=None):
+     # Check if the user is a staff member
     if not request.user.is_staff:
         return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
-
+    
+    # Retrieve tickets
     if request.method == 'GET':
         if ticket_id:
             try:
@@ -316,14 +350,16 @@ def manage_tickets(request, ticket_id=None):
             tickets = Ticket.objects.all()
             serializer = TicketSerializer(tickets, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-
+        
+    # Create a new ticket
     elif request.method == 'POST':
         serializer = TicketSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    # Update an existing ticket
     elif request.method == 'PUT':
         try:
             ticket = Ticket.objects.get(id=ticket_id)
@@ -334,7 +370,8 @@ def manage_tickets(request, ticket_id=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    # Delete a ticket
     elif request.method == 'DELETE':
         try:
             ticket = Ticket.objects.get(id=ticket_id)
@@ -343,12 +380,15 @@ def manage_tickets(request, ticket_id=None):
         ticket.delete()
         return Response("Ticket deleted", status=status.HTTP_204_NO_CONTENT)
 
+# Manage treatments (Create, Retrieve, Update, Delete)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def manage_treatments(request, treatment_id=None):
+    # Check if the user is a staff member
     if not request.user.is_staff:
         return Response("Unauthorized", status=status.HTTP_403_FORBIDDEN)
 
+    # Retrieve treatments
     if request.method == 'GET':
         if treatment_id:
             try:
@@ -362,6 +402,7 @@ def manage_treatments(request, treatment_id=None):
             serializer = TreatmentSerializer(treatments, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
     
+    # Create a new treatment
     elif request.method == 'POST':
         serializer = TreatmentSerializer(data=request.data)
         if serializer.is_valid():
@@ -369,6 +410,7 @@ def manage_treatments(request, treatment_id=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Update an existing treatment
     elif request.method == 'PUT':
         try:
             treatment = Treatment.objects.get(id=treatment_id)
@@ -380,6 +422,7 @@ def manage_treatments(request, treatment_id=None):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Delete a treatment
     elif request.method == 'DELETE':
         try:
             treatment = Treatment.objects.get(id=treatment_id)
@@ -387,10 +430,12 @@ def manage_treatments(request, treatment_id=None):
             return Response("Treatment not found", status=status.HTTP_404_NOT_FOUND)
         treatment.delete()
         return Response("Treatment deleted", status=status.HTTP_204_NO_CONTENT)
-    
+
+# Manage attractions (Create, Retrieve, Update, Delete)    
 class AttractionView(APIView):
     permission_classes = [IsAuthenticated]
 
+     # Retrieve attractions
     def get(self, request, attraction_id=None):
         if attraction_id:
             try:
@@ -403,6 +448,7 @@ class AttractionView(APIView):
             serializer = AttractionSerializer(attractions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # Create a new attraction
     def post(self, request):
         serializer = AttractionSerializer(data=request.data)
         if serializer.is_valid():
@@ -410,6 +456,7 @@ class AttractionView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Update an existing attraction
     def put(self, request, attraction_id):
         try:
             attraction = Attraction.objects.get(id=attraction_id)
@@ -421,6 +468,7 @@ class AttractionView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Delete an attraction
     def delete(self, request, attraction_id):
         try:
             attraction = Attraction.objects.get(id=attraction_id)
