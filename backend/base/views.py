@@ -14,14 +14,18 @@ from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['POST'])
 def register(request):
-    """Registers a new user with the given username, email, and password."""
+    """Registers a new client with the given username, email, password, and phone number."""
     username = request.data['username']
     email = request.data['email']
     password = request.data['password']
+    phone_number = request.data.get('phone_number', '')
+
     try:
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
-        return Response("New user registered", status=status.HTTP_201_CREATED)
+        client = Client.objects.create(user=user, phone_number=phone_number)
+        client.save()
+        return Response("New client registered", status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

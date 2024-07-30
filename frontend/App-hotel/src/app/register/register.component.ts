@@ -24,11 +24,17 @@ export class RegisterComponent {
   username: string = '';
   email: string = '';
   password: string = '';
+  phone_number: string = '';  // Added phone number field
 
   constructor(private authService: AuthService, private router: Router) { }
 
   register(): void {
-    const userData = { username: this.username, email: this.email, password: this.password };
+    const userData = { 
+      username: this.username, 
+      email: this.email, 
+      password: this.password,
+      phone_number: this.phone_number  // Include phone number in user data
+    };
     this.authService.register(userData).subscribe(
       response => {
         console.log(response);
