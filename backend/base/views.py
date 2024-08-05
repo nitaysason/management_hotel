@@ -53,6 +53,7 @@ def login_view(request):
 
         return Response(response_data, status=status.HTTP_200_OK)
     return Response("Invalid credentials", status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
@@ -60,33 +61,33 @@ def logout_view(request):
     logout(request)
     return Response("User logged out", status=status.HTTP_200_OK)
 
-class RoomView(APIView):
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def manage_rooms(request, room_id=None):
     """Handles CRUD operations for Room objects."""
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, room_id=None):
-        """Retrieves a specific room by ID or all rooms if no ID is provided."""
+    if request.method == 'GET':
         if room_id:
             try:
                 room = Room.objects.get(id=room_id)
                 serializer = RoomSerializer(room)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             except Room.DoesNotExist:
                 return Response("Room not found", status=status.HTTP_404_NOT_FOUND)
         else:
             rooms = Room.objects.all()
             serializer = RoomSerializer(rooms, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        """Creates a new room."""
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
         serializer = RoomSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, room_id):
-        """Updates an existing room by ID."""
+    
+    elif request.method == 'PUT':
+        if not room_id:
+            return Response("Room ID is required", status=status.HTTP_400_BAD_REQUEST)
         try:
             room = Room.objects.get(id=room_id)
         except Room.DoesNotExist:
@@ -96,16 +97,16 @@ class RoomView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, room_id):
-        """Deletes a specific room by ID."""
+    
+    elif request.method == 'DELETE':
+        if not room_id:
+            return Response("Room ID is required", status=status.HTTP_400_BAD_REQUEST)
         try:
             room = Room.objects.get(id=room_id)
         except Room.DoesNotExist:
             return Response("Room not found", status=status.HTTP_404_NOT_FOUND)
         room.delete()
         return Response("Room deleted", status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

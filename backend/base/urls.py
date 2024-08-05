@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (AttractionView, delete_contact_message, get_contact_messages, get_treatments, register, login_view, logout_view, RoomView, 
+from .views import (AttractionView, delete_contact_message, get_contact_messages, get_treatments, manage_rooms, register, login_view, logout_view,  
                     make_reservation, respond_contact_message, view_reservations, cancel_reservation,update_reservation, order_treatment, view_orders, 
                     book_ticket, view_tickets, contact_hotel, view_clients, manage_orders, manage_tickets, manage_treatments)
 
@@ -7,8 +7,8 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('rooms/', RoomView.as_view(), name='rooms'),
-    path('rooms/<int:room_id>/', RoomView.as_view(), name='room_detail'),
+    path('rooms/', manage_rooms, name='manage_rooms'),
+    path('rooms/<int:room_id>/', manage_rooms, name='manage_room'),
     path('reservations/make/', make_reservation, name='make_reservation'),
     path('reservations/view/', view_reservations, name='view_reservations'),
     path('reservations/cancel/<int:reservation_id>/', cancel_reservation, name='cancel_reservation'),
