@@ -53,7 +53,6 @@ def login_view(request):
 
         return Response(response_data, status=status.HTTP_200_OK)
     return Response("Invalid credentials", status=status.HTTP_400_BAD_REQUEST)
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
@@ -218,8 +217,12 @@ def get_contact_messages(request):
         # Staff user - return all contact messages
         contact_messages = ContactMessage.objects.all()
     else:
-        # Regular user - return only messages from this user
-        contact_messages = ContactMessage.objects.filter(client=request.user.id)
+        try:
+            client = Client.objects.get(user=request.user)
+            # Regular user - return only messages from this user
+            contact_messages = ContactMessage.objects.filter(client=client)
+        except ObjectDoesNotExist:
+            return Response({"error": "Client profile not found for this user"}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = ContactMessageSerializer(contact_messages, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -228,14 +231,18 @@ def get_contact_messages(request):
 @permission_classes([IsAuthenticated])
 def contact_hotel(request):
     """Saves a new contact message from the current user."""
-    contact_data = request.data
-    contact_data['client'] = request.user.id  # Ensure the message is associated with the logged-in user
-    serializer = ContactMessageSerializer(data=contact_data)
-    
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        client = Client.objects.get(user=request.user)
+        contact_data = request.data
+        contact_data['client'] = client.id  # Ensure the message is associated with the logged-in client's ID
+        serializer = ContactMessageSerializer(data=contact_data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except ObjectDoesNotExist:
+        return Response({"error": "Client profile not found for this user"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
